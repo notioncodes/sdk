@@ -1,7 +1,7 @@
 import { type, Type } from "arktype";
 import { BehaviorSubject, concat, defer, EMPTY, from, Observable, of, throwError } from "rxjs";
 import { concatMap, map, reduce, retry, share, switchMap, tap } from "rxjs/operators";
-import type { ReadContext } from "./context";
+import type { Context } from "./context";
 import type { QueryOperator } from "./query";
 
 export interface SchemaRegistryType {
@@ -75,78 +75,79 @@ export function validateWithSchema<T>(schema: Type<T>, data: unknown): Observabl
  * Reactive query builder with RxJS observables.
  */
 export class QueryBuilder<T> {
-  private context: ReadContext<T> = {
+  private schemaName: string;
+  private schemaRegistry: SchemaRegistryType;
+  private executor: (context: Context<T>) => Observable<T[]>;
+  private rawExecutor?: (config: RawQueryConfig) => Observable<T[]>;
+  private schema?: Type<T>;
+
+  private context = new BehaviorSubject<Context<T>>({
     conditions: [],
     sorts: [],
     includes: []
-  };
-
-  private rawQuery?: RawQueryConfig;
-  private schema?: Type<T>;
-  private contextSubject = new BehaviorSubject<ReadContext<T>>(this.context);
+  });
 
   constructor(
-    private schemaName: string,
-    private schemaRegistry: SchemaRegistryType,
-    private executor: (context: ReadContext<T>) => Observable<T[]>,
-    private rawExecutor?: (config: RawQueryConfig) => Observable<T[]>,
+    schemaName: string,
+    schemaRegistry: SchemaRegistryType,
+    executor: (context: Context<T>) => Observable<T[]>,
+    rawExecutor?: (config: RawQueryConfig) => Observable<T[]>,
     schema?: Type<T>
   ) {
+    this.schemaName = schemaName;
+    this.schemaRegistry = schemaRegistry;
+    this.executor = executor;
+    this.rawExecutor = rawExecutor;
     this.schema = schema;
   }
 
-  /**
-   * Add a where condition with full type safety.
-   */
   where<K extends keyof T>(field: K, operator: QueryOperator, value: T[K]): this {
-    this.context.conditions.push({ field, operator, value });
-    this.contextSubject.next(this.context);
+    this.context.next({
+      ...this.context.value,
+      conditions: [...this.context.value.conditions, { field, operator, value }]
+    });
     return this;
   }
 
-  /**
-   * Add sorting with type safety.
-   */
   orderBy<K extends keyof T>(field: K, direction: "asc" | "desc" = "asc"): this {
-    this.context.sorts.push({ field, direction });
-    this.contextSubject.next(this.context);
+    this.context.next({
+      ...this.context.value,
+      sorts: [...this.context.value.sorts, { field, direction }]
+    });
     return this;
   }
 
-  /**
-   * Set result limit.
-   */
   limit(count: number): this {
-    this.context.limitValue = count;
-    this.contextSubject.next(this.context);
+    this.context.next({
+      ...this.context.value,
+      limitValue: count
+    });
     return this;
   }
 
-  /**
-   * Set result offset.
-   */
   offset(count: number): this {
-    this.context.offsetValue = count;
-    this.contextSubject.next(this.context);
+    this.context.next({
+      ...this.context.value,
+      offsetValue: count
+    });
     return this;
   }
 
-  /**
-   * Include related entities.
-   */
   include(...relations: string[]): this {
-    this.context.includes.push(...relations);
-    this.contextSubject.next(this.context);
+    this.context.next({
+      ...this.context.value,
+      includes: [...this.context.value.includes, ...relations]
+    });
     return this;
   }
 
-  /**
-   * Select specific fields with type inference.
-   */
   select<K extends keyof T>(...fields: K[]): QueryBuilder<Pick<T, K>> {
-    const newContext = { ...this.context, selectedFields: fields as (keyof T)[] };
+    const newContext = {
+      ...this.context.value,
+      selectedFields: fields as (keyof T)[]
+    };
 
-    const executor = (ctx: ReadContext<Pick<T, K>>): Observable<Pick<T, K>[]> => {
+    const executor = (ctx: Context<Pick<T, K>>): Observable<Pick<T, K>[]> => {
       const mergedContext = {
         ...newContext,
         ...ctx,
@@ -154,7 +155,7 @@ export class QueryBuilder<T> {
         selectedFields: fields as (keyof T)[]
       };
 
-      return this.executor(mergedContext as ReadContext<T>).pipe(
+      return this.executor(mergedContext as Context<T>).pipe(
         map((results) =>
           results.map((item) => {
             const picked: any = {};
@@ -189,17 +190,14 @@ export class QueryBuilder<T> {
     return builder;
   }
 
-  /**
-   * Raw query escape hatch for complex scenarios.
-   */
   raw(query: string, params?: any[], skipValidation = false): this {
-    this.rawQuery = { query, params, skipValidation };
+    this.context.next({
+      ...this.context.value,
+      rawQuery: { query, params, skipValidation }
+    });
     return this;
   }
 
-  /**
-   * Stream results with automatic batching and backpressure.
-   */
   stream(options?: StreamOptions): Observable<T> {
     const config: BatchConfig = {
       bufferSize: options?.bufferSize || 100,
@@ -215,15 +213,15 @@ export class QueryBuilder<T> {
       const fetchBatch = (): Observable<T[]> => {
         if (!hasMore) return EMPTY;
 
-        if (this.rawQuery) {
+        if (this.context.value.rawQuery) {
           if (!this.rawExecutor) {
             return throwError(() => new Error("Raw query executor not provided"));
           }
-          return this.rawExecutor(this.rawQuery);
+          return this.rawExecutor(this.context.value.rawQuery);
         }
 
         const batchContext = {
-          ...this.context,
+          ...this.context.value,
           limitValue: config.bufferSize,
           offsetValue: offset
         };
@@ -244,7 +242,7 @@ export class QueryBuilder<T> {
             }
 
             const validated$ =
-              this.schema && !this.rawQuery?.skipValidation
+              this.schema && !this.context.value.rawQuery?.skipValidation
                 ? from(results).pipe(concatMap((result) => validateWithSchema(this.schema!, result)))
                 : from(results);
 
@@ -262,20 +260,17 @@ export class QueryBuilder<T> {
     }).pipe(retry({ count: config.retryCount, delay: config.retryDelay }), share());
   }
 
-  /**
-   * Execute the query and return all results as an observable.
-   */
   execute(): Observable<T[]> {
-    if (this.rawQuery) {
+    if (this.context.value.rawQuery) {
       if (!this.rawExecutor) {
         return throwError(() => new Error("Raw query executor not provided"));
       }
 
-      const source$ = this.rawExecutor(this.rawQuery);
+      const source$ = this.rawExecutor(this.context.value.rawQuery);
 
       return source$.pipe(
         switchMap((results) => {
-          if (this.schema && !this.rawQuery?.skipValidation) {
+          if (this.schema && !this.context.value.rawQuery?.skipValidation) {
             return from(results).pipe(
               concatMap((result) => validateWithSchema(this.schema!, result)),
               reduce((acc, validated) => [...acc, validated], [] as T[])
@@ -287,7 +282,7 @@ export class QueryBuilder<T> {
       );
     }
 
-    const source$ = this.executor(this.context);
+    const source$ = this.executor(this.context.value);
 
     return source$.pipe(
       switchMap((results) => {
@@ -304,14 +299,14 @@ export class QueryBuilder<T> {
   }
 
   /**
-   * Execute the query and return the first result.
+   * Execute the query and return just the first result.
    */
   first(): Observable<T | null> {
-    if (this.rawQuery) {
+    if (this.context.value.rawQuery) {
       return this.execute().pipe(map((results) => (results.length > 0 ? results[0]! : null)));
     }
 
-    const limitedContext = { ...this.context, limitValue: 1 };
+    const limitedContext = { ...this.context.value, limitValue: 1 };
 
     return this.executor(limitedContext).pipe(
       switchMap((results) => {
@@ -335,7 +330,7 @@ export class QueryBuilder<T> {
    * Count matching records.
    */
   count(): Observable<number> {
-    if (this.rawQuery) {
+    if (this.context.value.rawQuery) {
       return this.execute().pipe(map((results) => results.length));
     }
 
@@ -347,8 +342,8 @@ export class QueryBuilder<T> {
   /**
    * Get the current query context as an observable.
    */
-  getContext(): Observable<ReadContext<T>> {
-    return this.contextSubject.asObservable();
+  getContext(): Observable<Context<T>> {
+    return this.context.asObservable();
   }
 
   /**
@@ -356,34 +351,6 @@ export class QueryBuilder<T> {
    */
   getSchema(): Type<T> | undefined {
     return this.schema;
-  }
-
-  /**
-   * Clone the current builder for reuse.
-   */
-  clone(): QueryBuilder<T> {
-    const cloned = new QueryBuilder<T>(
-      this.schemaName,
-      this.schemaRegistry,
-      this.executor,
-      this.rawExecutor,
-      this.schema
-    );
-
-    cloned.context = {
-      conditions: [...this.context.conditions],
-      sorts: [...this.context.sorts],
-      includes: [...this.context.includes],
-      limitValue: this.context.limitValue,
-      offsetValue: this.context.offsetValue,
-      selectedFields: this.context.selectedFields ? [...this.context.selectedFields] : undefined
-    };
-
-    if (this.rawQuery) {
-      cloned.rawQuery = { ...this.rawQuery };
-    }
-
-    return cloned;
   }
 
   /**
@@ -435,86 +402,3 @@ export class QueryBuilder<T> {
     return this.execute();
   }
 }
-
-/**
- * Factory function to create a reactive query builder.
- */
-export function createQueryBuilder<T>(
-  schemaName: string,
-  schemaRegistry: SchemaRegistryType,
-  executor: (context: ReadContext<T>) => Observable<T[]>,
-  rawExecutor?: (config: RawQueryConfig) => Observable<T[]>,
-  schema?: Type<T>
-): QueryBuilder<T> {
-  return new QueryBuilder<T>(schemaName, schemaRegistry, executor, rawExecutor, schema);
-}
-
-/**
- * Utility functions for common query patterns.
- */
-export const QueryUtils = {
-  /**
-   * Combine multiple queries with AND logic.
-   */
-  and<T>(...queries: Observable<T[]>[]): Observable<T[]> {
-    return from(queries).pipe(
-      concatMap((query) => query),
-      reduce((acc, results) => {
-        if (acc.length === 0) return results;
-        return acc.filter((item) => results.some((result) => JSON.stringify(item) === JSON.stringify(result)));
-      }, [] as T[])
-    );
-  },
-
-  /**
-   * Combine multiple queries with OR logic.
-   */
-  or<T>(...queries: Observable<T[]>[]): Observable<T[]> {
-    return from(queries).pipe(
-      concatMap((query) => query),
-      reduce((acc, results) => {
-        const combined = [...acc];
-        results.forEach((result) => {
-          if (!combined.some((item) => JSON.stringify(item) === JSON.stringify(result))) {
-            combined.push(result);
-          }
-        });
-        return combined;
-      }, [] as T[])
-    );
-  },
-
-  /**
-   * Paginate results.
-   */
-  paginate<T>(source: Observable<T[]>, pageSize: number, pageNumber: number): Observable<T[]> {
-    return source.pipe(
-      map((results) => {
-        const start = (pageNumber - 1) * pageSize;
-        const end = start + pageSize;
-        return results.slice(start, end);
-      })
-    );
-  },
-
-  /**
-   * Batch process results.
-   */
-  batch<T, R>(source: Observable<T[]>, batchSize: number, processor: (batch: T[]) => Observable<R[]>): Observable<R[]> {
-    return source.pipe(
-      switchMap((results) => {
-        const batches: T[][] = [];
-        for (let i = 0; i < results.length; i += batchSize) {
-          batches.push(results.slice(i, i + batchSize));
-        }
-
-        return from(batches).pipe(
-          concatMap((batch) => processor(batch)),
-          reduce((acc, batchResults) => [...acc, ...batchResults], [] as R[])
-        );
-      })
-    );
-  }
-};
-
-// Export types for external use

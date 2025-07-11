@@ -1,20 +1,14 @@
-import type { Type } from "arktype";
-import type { QueryCondition, SortSpec } from "./builder";
+import type { QueryCondition, RawQueryConfig, SortSpec } from "./builder";
 
 /**
  * Query execution context.
  */
-export interface ReadContext<T> {
+export interface Context<T> {
   conditions: QueryCondition<T>[];
   sorts: SortSpec<T>[];
   limitValue?: number;
   offsetValue?: number;
   includes: string[];
   selectedFields?: (keyof T)[];
+  rawQuery?: RawQueryConfig;
 }
-
-export interface WriteContext<T> {
-  schema: Type<T>;
-}
-
-export type Context<T> = ReadContext<T> | WriteContext<T>;

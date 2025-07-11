@@ -1,4 +1,17 @@
-import { bgBlack, bgGreenBright, black, blueBright, gray, greenBright, magenta, red, white, yellow } from "ansis";
+import {
+  bgBlack,
+  bgCyan,
+  bgGreenBright,
+  black,
+  blueBright,
+  bold,
+  gray,
+  greenBright,
+  magenta,
+  red,
+  white,
+  yellow
+} from "ansis";
 import { inspect as nodeInspect } from "node:util";
 
 export namespace log {
@@ -39,14 +52,27 @@ export namespace log {
       line: lineNumber,
       column: columnNumber,
       str: () => {
-        if (scriptPath?.split("/").slice(3).join("/")) {
-          return `${gray(scriptPath?.split("/").slice(3).join("/"))}${black(":" + lineNumber)}:${magenta(
-            functionName?.trim() || "0"
-          )}`;
+        // Get current working directory and make path relative to it
+        const cwd = process.cwd();
+        let relativePath = scriptPath;
+
+        if (scriptPath && scriptPath.startsWith(cwd)) {
+          relativePath = scriptPath.substring(cwd.length + 1); // +1 to remove leading slash
+        } else if (scriptPath) {
+          // Fallback: try to extract relative path from common patterns
+          const patterns = ["/workspace/", "/packages/", "/src/"];
+          for (const pattern of patterns) {
+            const index = scriptPath.indexOf(pattern);
+            if (index !== -1) {
+              relativePath = scriptPath.substring(index + 1);
+              break;
+            }
+          }
         }
-        return `${gray(scriptPath?.split("/").slice(2).join("/"))}${black(":" + lineNumber)}:${magenta(
-          functionName?.replace("async", "").trim() || "0"
-        )}`;
+
+        return `${magenta(functionName?.replace("async", "").trim() || "0")} ${gray(
+          relativePath || scriptPath || "unknown"
+        )}${black(":" + lineNumber)}`;
       }
     };
   };
@@ -58,7 +84,7 @@ export namespace log {
    * @param skipFrames - Number of stack frames to skip (default: 3)
    * @returns Formatted location string
    */
-  const loc = (skipFrames = 3): string => {
+  const loc = (skipFrames = 2): string => {
     // Create an error to get the stack trace
     const error = new Error();
     const stack = error.stack;
@@ -130,8 +156,8 @@ export namespace log {
    * @param args - Arguments to inspect
    */
   export const debug = (message: string, args?: any) => {
-    console.log(`${d()} 🐛 ${white(message)} ${args ? JSON.stringify(args) : ""} ${loc()}`);
-    // console.log(nodeInspect(args, { depth: null, colors: true, sorted: true }));
+    console.log(bgCyan(`${d()} 🐛 ${bold(message)} ${loc()}`));
+    console.log(nodeInspect(args, { depth: 4, colors: true, sorted: true }));
   };
 
   /**

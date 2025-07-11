@@ -1,7 +1,9 @@
-import { from, Observable } from "rxjs";
-import { mergeMap } from "rxjs/operators";
+import { from, Observable, throwError } from "rxjs";
+import { fromFetch } from "rxjs/fetch";
+import { catchError, switchMap, tap } from "rxjs/operators";
 import type { ListResponse, PageOrDatabase } from "../schemas/types/reponses";
 import type { SearchParameters } from "../schemas/types/request";
+import { log } from "../util/logging";
 import { Operator, type NotionConfig } from "./operator";
 
 /**
@@ -67,23 +69,53 @@ export class SearchOperator extends Operator<SearchRequest, SearchResponse> {
       body.page_size = request.pageSize;
     }
 
-    return from(
-      fetch(`${context.baseUrl}/search`, {
+    log.debug("search-operator", body);
+
+    try {
+      return fromFetch(`${context.baseUrl}/search`, {
         method: "POST",
         headers: {
           ...context.headers,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(body)
-      })
-    ).pipe(
-      mergeMap(async (response) => {
-        if (!response.ok) {
-          throw new Error(`Search failed: ${response.statusText}`);
-        }
-        return response.json() as Promise<SearchResponse>;
-      })
-    );
+      }).pipe(
+        tap((response) => {
+          log.debug("http response", {
+            status: response.status,
+            statusText: response.statusText,
+            ok: response.ok,
+            headers: Object.fromEntries(response.headers.entries())
+          });
+        }),
+        switchMap((response) => {
+          if (!response.ok) {
+            return from(response.text()).pipe(
+              switchMap((errorText) => {
+                log.error("http error", errorText);
+                throw new Error(`Search failed: ${response.status} ${response.statusText} - ${errorText}`);
+              })
+            );
+          }
+
+          return from(response.json()).pipe(
+            tap((json) => {
+              log.debug("http response json", json);
+            })
+          );
+        }),
+        catchError((error) => {
+          log.error("search operator error", error);
+          if (error.name === "TypeError" && error.message.includes("fetch")) {
+            log.error("network error", "check internet connection and API endpoint");
+          }
+          return throwError(() => error);
+        })
+      );
+    } catch (error) {
+      log.error("search operator setup error", error);
+      return throwError(() => error);
+    }
   }
 }
 
