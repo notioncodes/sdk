@@ -1,6 +1,7 @@
 import { Client } from "@notionhq/client";
 import { SearchParameters } from "./schemas/request";
 import { log } from "./util/logging";
+import { createNotionClient } from "./client/index";
 
 export interface NotionConfig {
   apiKey: string;
@@ -16,6 +17,10 @@ export interface RateLimitInfo {
   retryAfter?: number;
 }
 
+/**
+ * @deprecated Use createNotionClient() for the new type-safe API
+ * This class is maintained for backward compatibility
+ */
 export class NotionClient {
   private client: Client;
   private rateLimitInfo: RateLimitInfo | null = null;
@@ -28,7 +33,20 @@ export class NotionClient {
     });
   }
 
-  async paginate<T>(parms: SearchParameters): Promise<NotionSearchResponse<T>> {
+  /**
+   * Get the new type-safe client instance
+   * @returns The new optimized Notion client
+   */
+  getOptimizedClient() {
+    return createNotionClient({
+      auth: this.config.apiKey,
+      baseUrl: this.config.baseUrl,
+      timeoutMs: this.config.timeout,
+      notionVersion: this.config.apiVersion
+    });
+  }
+
+  async paginate<T>(parms: SearchParameters): Promise<any> {
     return this.execute(`notion-client.paginate(${JSON.stringify(parms)})`, async () => {
       const response = await this.client.search(parms);
       const results = response.results.map((result) => {});
