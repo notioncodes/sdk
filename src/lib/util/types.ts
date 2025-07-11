@@ -1,9 +1,19 @@
+import type { Type } from "arktype";
+
 /**
- * @module utils
+ * Utility type to infer the TypeScript type from an ArkType schema.
+ * This allows us to derive static types from runtime schemas.
  *
- * Utility functions for the Notion SDK.
- * Provides helper functions for type checking and validation.
+ * @template T - The ArkType schema to infer from
+ *
+ * @example
+ * ```typescript
+ * const userSchema = type({ name: "string", age: "number" });
+ * type User = InferredType<typeof userSchema>;
+ * // User is { name: string; age: number }
+ * ```
  */
+export type InferredType<T extends Type> = T extends Type<infer U> ? U : never;
 
 /**
  * Utility function for exhaustive type checking.

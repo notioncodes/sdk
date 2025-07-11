@@ -25,6 +25,6 @@
       "$util/*": ["./src/lib/util/*"]
     }
   },
-  "include": ["./src/**/*", "scripts/**/*"],
+  "include": ["./src/**/*", "scripts/**/*", "tmp/generator"],
   "exclude": ["**/*.test.ts", "node_modules"]
 }

@@ -1,23 +1,6 @@
-/**
- * @module schemas/pages.test
- *
- * Comprehensive test suite for page schemas.
- * Tests page properties and variations.
- */
-
 import { describe, expect, it } from "vitest";
-import type { DatabaseId, PageId } from "./core";
-import {
-  fullPageSchema,
-  getPageTitle,
-  isFullPage,
-  // Type utilities
-  isPage,
-  // Page property schemas
-  pagePropertiesSchema,
-  // Page schemas
-  pageSchema
-} from "./pages";
+import { DatabaseId, PageId } from "./brands";
+import { fullPageSchema, getPageTitle, isFullPage, isPage, pagePropertiesSchema, pageSchema } from "./pages";
 
 describe("Page Schemas", () => {
   const basePageProperties = {

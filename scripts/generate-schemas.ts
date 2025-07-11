@@ -1,40 +1,104 @@
 #!/usr/bin/env tsx
 
 /**
- * CLI script for generating ArkType schemas from Notion API endpoint types.
+ * CLI script for generating focused ArkType schemas from Notion API endpoint types.
  *
- * This script uses the generator infrastructure to convert TypeScript types
- * from @api-endpoints.d.ts into ArkType schemas for runtime validation.
+ * This enhanced script uses the focused generator infrastructure to convert high-value
+ * TypeScript types from @api-endpoints.d.ts into ArkType schemas for runtime validation.
+ *
+ * Key improvements:
+ * - Focuses on high-value complex types
+ * - Integrates with existing manual schemas
+ * - Generates utility functions
+ * - Creates organized output files
  *
  * Usage:
  *   npm run generate:schemas
  *   tsx scripts/generate-schemas.ts [options]
  *
  * Options:
- *   --input <path>      Input TypeScript file (default: .notion/api-endpoints.d.ts)
- *   --output <path>     Output schema file (default: src/generated/schemas.ts)
- *   --max-types <num>   Maximum number of types to process (default: unlimited)
- *   --skip-complex      Skip overly complex types
- *   --validate          Validate generated schemas
- *   --verbose           Enable verbose logging
- *   --help              Show this help message
+ *   --input <path>        Input TypeScript file (default: .notion/api-endpoints.d.ts)
+ *   --output <dir>        Output directory (default: src/generated)
+ *   --target <types>      Comma-separated list of specific types to generate
+ *   --mode <mode>         Integration mode: standalone|extend|replace (default: extend)
+ *   --complexity <level>  Max complexity: simple|medium|complex (default: complex)
+ *   --no-utilities        Skip generating utility functions
+ *   --verbose             Enable verbose logging
+ *   --help                Show this help message
  */
 
 import ansis from "ansis";
 import { existsSync } from "fs";
 import { resolve } from "path";
 import { parseArgs } from "util";
-import { SchemaGenerator } from "../src/lib/generator/generator";
+import { FocusedSchemaGenerator } from "../tmp/generator/generator.js";
 
 interface CliOptions {
   input: string;
   output: string;
-  maxTypes?: number;
-  skipComplex: boolean;
-  validate: boolean;
+  target?: string[];
+  mode: "standalone" | "extend" | "replace";
+  complexity: "simple" | "medium" | "complex";
+  utilities: boolean;
   verbose: boolean;
   help: boolean;
 }
+
+/**
+ * High-value type sets for different use cases.
+ */
+const TYPE_SETS = {
+  // Essential types for basic SDK functionality
+  essential: ["PageObjectResponse", "DatabaseObjectResponse", "BlockObjectResponse", "RichTextItemResponse"],
+
+  // API parameter types for request/response handling
+  api: [
+    "CreatePageBodyParameters",
+    "UpdatePageBodyParameters",
+    "QueryDatabaseBodyParameters",
+    "SearchBodyParameters",
+    "AppendBlockChildrenBodyParameters"
+  ],
+
+  // Property and filtering types
+  properties: ["PropertyFilter", "PropertyItemObjectResponse", "DatabasePropertyConfigResponse"],
+
+  // All high-value types (default)
+  all: [
+    // Page types
+    "PageObjectResponse",
+    "PartialPageObjectResponse",
+    "CreatePageBodyParameters",
+    "UpdatePageBodyParameters",
+
+    // Database types
+    "DatabaseObjectResponse",
+    "PartialDatabaseObjectResponse",
+    "QueryDatabaseBodyParameters",
+    "CreateDatabaseBodyParameters",
+    "UpdateDatabaseBodyParameters",
+
+    // Block types
+    "BlockObjectResponse",
+    "BlockObjectRequest",
+    "BlockObjectRequestWithoutChildren",
+    "BlockObjectWithSingleLevelOfChildrenRequest",
+
+    // Property types
+    "PropertyFilter",
+    "PropertyItemObjectResponse",
+    "DatabasePropertyConfigResponse",
+
+    // Content types
+    "RichTextItemResponse",
+    "RichTextItemRequest",
+
+    // API types
+    "SearchBodyParameters",
+    "ListCommentsQueryParameters",
+    "AppendBlockChildrenBodyParameters"
+  ]
+};
 
 /**
  * Parses command line arguments and returns CLI options.
@@ -51,24 +115,29 @@ function parseCliArgs(): CliOptions {
       output: {
         type: "string",
         short: "o",
-        default: "src/generated/schemas.ts"
+        default: "src/generated"
       },
-      "max-types": {
+      target: {
         type: "string",
-        short: "m"
+        short: "t"
       },
-      "skip-complex": {
-        type: "boolean",
-        short: "s",
-        default: false
+      mode: {
+        type: "string",
+        short: "m",
+        default: "extend"
       },
-      validate: {
+      complexity: {
+        type: "string",
+        short: "c",
+        default: "complex"
+      },
+      "no-utilities": {
         type: "boolean",
-        short: "v",
         default: false
       },
       verbose: {
         type: "boolean",
+        short: "v",
         default: false
       },
       help: {
@@ -80,14 +149,47 @@ function parseCliArgs(): CliOptions {
     allowPositionals: true
   });
 
+  // Parse target types
+  let targetTypes: string[] | undefined;
+
+  if (values.target) {
+    if (values.target in TYPE_SETS) {
+      targetTypes = TYPE_SETS[values.target as keyof typeof TYPE_SETS];
+      console.log(ansis.cyan(`📋 Using predefined type set: ${values.target} (${targetTypes.length} types)`));
+    } else {
+      targetTypes = values.target
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+      console.log(ansis.cyan(`📋 Using custom types: ${targetTypes.join(", ")}`));
+    }
+  }
+
+  // Validate mode
+  const validModes = ["standalone", "extend", "replace"];
+  if (values.mode && !validModes.includes(values.mode)) {
+    console.error(ansis.red(`❌ Invalid mode: ${values.mode}. Must be one of: ${validModes.join(", ")}`));
+    process.exit(1);
+  }
+
+  // Validate complexity
+  const validComplexities = ["simple", "medium", "complex"];
+  if (values.complexity && !validComplexities.includes(values.complexity)) {
+    console.error(
+      ansis.red(`❌ Invalid complexity: ${values.complexity}. Must be one of: ${validComplexities.join(", ")}`)
+    );
+    process.exit(1);
+  }
+
   return {
     input: resolve(process.cwd(), values.input as string),
     output: resolve(process.cwd(), values.output as string),
-    maxTypes: values["max-types"] ? parseInt(values["max-types"] as string, 10) : undefined,
-    skipComplex: values["skip-complex"] as boolean,
-    validate: values.validate as boolean,
-    verbose: values.verbose as boolean,
-    help: values.help as boolean
+    target: targetTypes,
+    mode: (values.mode as any) || "extend",
+    complexity: (values.complexity as any) || "complex",
+    utilities: !values["no-utilities"],
+    verbose: Boolean(values.verbose),
+    help: Boolean(values.help)
   };
 }
 
@@ -95,31 +197,39 @@ function parseCliArgs(): CliOptions {
  * Displays help information.
  */
 function showHelp(): void {
-  console.log(ansis.bold.cyan("NotionKit Schema Generator"));
-  console.log(ansis.gray("Generates ArkType schemas from Notion API TypeScript definitions"));
+  console.log(ansis.bold("Focused Schema Generator"));
+  console.log();
+  console.log("Generates focused ArkType schemas from Notion API types.");
   console.log();
   console.log(ansis.bold("Usage:"));
-  console.log("  npm run generate:schemas");
   console.log("  tsx scripts/generate-schemas.ts [options]");
   console.log();
   console.log(ansis.bold("Options:"));
-  console.log("  -i, --input <path>      Input TypeScript file (default: .notion/api-endpoints.d.ts)");
-  console.log("  -o, --output <path>     Output schema file (default: src/generated/schemas.ts)");
-  console.log("  -m, --max-types <num>   Maximum number of types to process");
-  console.log("  -s, --skip-complex      Skip overly complex types");
-  console.log("  -v, --validate          Validate generated schemas");
-  console.log("      --verbose           Enable verbose logging");
-  console.log("  -h, --help              Show this help message");
+  console.log("  -i, --input <path>        Input TypeScript file");
+  console.log("  -o, --output <dir>        Output directory");
+  console.log("  -t, --target <types>      Target types (comma-separated or preset)");
+  console.log("  -m, --mode <mode>         Integration mode");
+  console.log("  -c, --complexity <level>  Maximum complexity level");
+  console.log("      --no-utilities        Skip utility function generation");
+  console.log("  -v, --verbose             Enable verbose logging");
+  console.log("  -h, --help                Show this help");
+  console.log();
+  console.log(ansis.bold("Target Type Presets:"));
+  console.log("  essential    Core types for basic functionality");
+  console.log("  api          API parameter types");
+  console.log("  properties   Property and filter types");
+  console.log("  all          All high-value types (default)");
+  console.log();
+  console.log(ansis.bold("Integration Modes:"));
+  console.log("  standalone   Generate independent schemas");
+  console.log("  extend       Extend existing manual schemas (default)");
+  console.log("  replace      Replace existing schemas");
   console.log();
   console.log(ansis.bold("Examples:"));
-  console.log("  # Generate all schemas");
-  console.log("  npm run generate:schemas");
-  console.log();
-  console.log("  # Generate first 50 schemas with validation");
-  console.log("  tsx scripts/generate-schemas.ts --max-types 50 --validate");
-  console.log();
-  console.log("  # Skip complex types and use verbose output");
-  console.log("  tsx scripts/generate-schemas.ts --skip-complex --verbose");
+  console.log("  tsx scripts/generate-schemas.ts");
+  console.log("  tsx scripts/generate-schemas.ts --target essential");
+  console.log("  tsx scripts/generate-schemas.ts --target PageObjectResponse,BlockObjectResponse");
+  console.log("  tsx scripts/generate-schemas.ts --mode standalone --complexity simple");
 }
 
 /**
@@ -196,18 +306,20 @@ async function main(): Promise<void> {
     logVerbose(options.verbose, "CLI options:", options);
 
     // Initialize the schema generator
-    const generator = new SchemaGenerator();
+    const generator = new FocusedSchemaGenerator();
 
     logVerbose(options.verbose, "Initializing schema generator...");
 
     // Generate schemas
     console.log(ansis.blue("⚙️"), "Generating schemas...");
 
-    await generator.generateSchemas({
+    await generator.generateFocusedSchemas({
       inputFile: options.input,
-      outputFile: options.output,
-      maxTypes: options.maxTypes,
-      skipComplexTypes: options.skipComplex
+      outputDir: options.output,
+      targetTypes: options.target,
+      includeUtilities: options.utilities,
+      integrationMode: options.mode,
+      maxComplexity: options.complexity
     });
 
     // Validate schemas if requested

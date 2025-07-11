@@ -1,87 +1,5 @@
-/**
- * @module schemas/core
- *
- * Core schemas and branded types that form the foundation of the SDK's type system.
- * These types ensure compile-time safety and prevent common mistakes like passing
- * the wrong ID type to an API method.
- */
-
 import { scope, type } from "arktype";
-
-// ============================================================================
-// Branded Types
-// ============================================================================
-
-/**
- * Creates a branded type to ensure type safety for different ID types.
- *
- * @template Brand - The brand identifier for the type.
- */
-export type Branded<T, Brand extends string> = T & { readonly __brand: Brand };
-
-/**
- * Page identifier with compile-time type safety.
- *
- * @example
- * ```typescript
- * const pageId: PageId = 'page_abc123' as PageId;
- * ```
- */
-export type PageId = Branded<string, "PageId">;
-
-/**
- * Database identifier with compile-time type safety.
- *
- * @example
- * ```typescript
- * const dbId: DatabaseId = 'db_xyz789' as DatabaseId;
- * ```
- */
-export type DatabaseId = Branded<string, "DatabaseId">;
-
-/**
- * Block identifier with compile-time type safety.
- *
- * @example
- * ```typescript
- * const blockId: BlockId = 'block_def456' as BlockId;
- * ```
- */
-export type BlockId = Branded<string, "BlockId">;
-
-/**
- * User identifier with compile-time type safety.
- *
- * @example
- * ```typescript
- * const userId: UserId = 'user_ghi789' as UserId;
- * ```
- */
-export type UserId = Branded<string, "UserId">;
-
-/**
- * Comment identifier with compile-time type safety.
- *
- * @example
- * ```typescript
- * const commentId: CommentId = 'comment_jkl012' as CommentId;
- * ```
- */
-export type CommentId = Branded<string, "CommentId">;
-
-/**
- * Workspace identifier with compile-time type safety.
- *
- * @example
- * ```typescript
- * const workspaceId: WorkspaceId = 'workspace_mno345' as WorkspaceId;
- * ```
- */
-export type WorkspaceId = Branded<string, "WorkspaceId">;
-
-// ============================================================================
-// ID Schemas
-// ============================================================================
+import { BlockId, CommentId, DatabaseId, PageId, UserId, WorkspaceId } from "./brands";
 
 /**
  * Schema for PageId validation.
@@ -113,10 +31,6 @@ export const commentIdSchema = type("string");
  */
 export const workspaceIdSchema = type("string");
 
-// ============================================================================
-// Base Schemas
-// ============================================================================
-
 /**
  * Schema for UUID validation.
  */
@@ -138,10 +52,6 @@ export const apiColorSchema = type(
  * Type representing API colors.
  */
 export type ApiColor = typeof apiColorSchema.infer;
-
-// ============================================================================
-// Common Schemas
-// ============================================================================
 
 /**
  * Schema for emoji strings.
@@ -274,10 +184,6 @@ export const parentSchema = parentScope.parent;
  */
 export type Parent = typeof parentSchema.infer;
 
-// ============================================================================
-// Rich Text Schemas
-// ============================================================================
-
 /**
  * Schema for text annotations.
  */
@@ -337,10 +243,6 @@ export const richTextSchema = type([richTextItemSchema, "[]"]);
  */
 export type RichText = typeof richTextSchema.infer;
 
-// ============================================================================
-// User Schema
-// ============================================================================
-
 /**
  * Schema for user objects.
  */
@@ -353,10 +255,6 @@ export const userSchema = type({
  * Type representing a user.
  */
 export type User = typeof userSchema.infer;
-
-// ============================================================================
-// Mention Schemas
-// ============================================================================
 
 /**
  * Schema for user mentions.
@@ -417,10 +315,6 @@ export const mentionItemSchema = mentionScope.mentionItem;
  * Type representing a mention.
  */
 export type MentionItem = typeof mentionItemSchema.infer;
-
-// ============================================================================
-// Utility Functions
-// ============================================================================
 
 /**
  * Type guard to check if a value is a PageId.

@@ -1,13 +1,5 @@
-/**
- * @module schemas/blocks.test
- *
- * Comprehensive test suite for block schemas.
- * Tests all block types and their variations.
- */
-
 import { describe, expect, it } from "vitest";
 import {
-  // Union schema
   blockSchema,
   calloutBlockSchema,
   codeBlockSchema,
@@ -19,14 +11,12 @@ import {
   heading1BlockSchema,
   heading2BlockSchema,
   imageBlockSchema,
-  // Type utilities
   isBlock,
-  // Block type schemas
   paragraphBlockSchema,
   tableOfContentsBlockSchema,
   toDoBlockSchema
-} from "./blocks-minimal";
-import type { BlockId } from "./core";
+} from "./blocks";
+import type { BlockId } from "./brands";
 
 describe("Block Schemas", () => {
   const baseBlockProperties = {

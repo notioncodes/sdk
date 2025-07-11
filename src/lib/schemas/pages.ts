@@ -1,23 +1,7 @@
-/**
- * @module schemas/pages
- *
- * Page schemas and utilities for the Notion SDK.
- * Handles page objects, properties, and page variations.
- */
-
 import { ArkErrors, type } from "arktype";
-import type { InferredType } from "../types";
-import { arkToNever } from "../utils";
-import {
-  type BlockId,
-  coverSchema,
-  type DatabaseId,
-  iconSchema,
-  type PageId,
-  pageIdSchema,
-  parentSchema,
-  userSchema
-} from "./core";
+import { arkToNever, type InferredType } from "../util/types";
+import { BlockId, DatabaseId, PageId } from "./brands";
+import { coverSchema, iconSchema, pageIdSchema, parentSchema, userSchema } from "./schemas";
 
 /**
  * Page property schemas for various property types.

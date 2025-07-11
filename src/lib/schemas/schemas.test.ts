@@ -5,7 +5,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import * as schemas from "./index";
+import * as schemas from "./schemas";
 
 describe("Schema Exports", () => {
   it("should export core schemas", () => {
