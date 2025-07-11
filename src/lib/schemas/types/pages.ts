@@ -1,23 +1,15 @@
-import { ArkErrors, type } from "arktype";
-import { arkToNever, type InferredType } from "../util/types";
+import { type } from "arktype";
+import { arkToNever, type InferredType } from "../../util/types";
+import { coverSchema, iconSchema, idSchema, parentSchema, userSchema } from "../schemas";
 import type { BlockId, DatabaseId, PageId } from "./brands";
-import { coverSchema, iconSchema, pageIdSchema, parentSchema, userSchema } from "./schemas";
 
-/**
- * Page property schemas for various property types.
- * This is a flexible schema that accepts any object with property definitions.
- */
 export const pagePropertiesSchema = type("Record<string, unknown>");
 
 export type PageProperties = InferredType<typeof pagePropertiesSchema>;
 
-/**
- * Base page schema without content.
- * Represents a page object returned by the Notion API.
- */
 export const pageSchema = type({
-  id: pageIdSchema,
   object: '"page"',
+  id: idSchema,
   created_time: "string",
   created_by: userSchema,
   last_edited_time: "string",
@@ -31,14 +23,10 @@ export const pageSchema = type({
   "public_url?": "string"
 });
 
-export type Page = InferredType<typeof pageSchema>;
+export type Page = typeof pageSchema.infer;
 
-/**
- * Full page schema including content blocks.
- * Used when retrieving a page with its content.
- */
 export const fullPageSchema = type({
-  id: pageIdSchema,
+  id: idSchema,
   object: '"page"',
   created_time: "string",
   created_by: userSchema,
@@ -122,27 +110,6 @@ export function getPageTitle(page: Page | FullPage): string {
     }
   }
   return "";
-}
-
-/**
- * Create a page ID from a string.
- * This is a convenience function that performs validation.
- *
- * @param id - The ID string to convert
- * @returns A validated PageId
- * @throws {ArkErrors} If the ID is invalid
- *
- * @example
- * ```typescript
- * const pageId = createPageId("12345678-1234-1234-1234-123456789012");
- * ```
- */
-export function createPageId(id: string): PageId {
-  const result = pageIdSchema(id);
-  if (result instanceof ArkErrors) {
-    throw result;
-  }
-  return result as PageId;
 }
 
 /**

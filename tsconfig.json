@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "./dist",
-    "module": "esnext",
+    "module": "es2022",
     "moduleResolution": "bundler",
     "target": "es2022",
     "verbatimModuleSyntax": true,
@@ -14,7 +14,15 @@
     "noImplicitAny": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitReturns": true,
-    "noImplicitThis": true
+    "noImplicitThis": true,
+    "paths": {
+      "$util/*": ["./src/lib/util/*"],
+      "$schemas/*": ["./src/lib/schemas/*"],
+      "$api/*": ["./src/lib/api/*"],
+      "$core/*": ["./src/lib/core/*"],
+      "$clients/*": ["./src/lib/clients/*"]
+    },
+    "types": ["vitest/globals"]
   },
   "include": ["./src/**/*"],
   "exclude": ["**/*.test.ts"]

@@ -12,7 +12,7 @@
 import { type, Type } from "arktype";
 import { BehaviorSubject, concat, defer, EMPTY, from, Observable, of, throwError } from "rxjs";
 import { concatMap, map, reduce, retry, share, switchMap, tap } from "rxjs/operators";
-import type { QueryOperator, SchemaRegistry, StreamOptions } from "../../api/core/types";
+import type { QueryOperator, SchemaRegistryType, StreamOptions } from "../../api/types";
 
 /**
  * Query condition for filtering.
@@ -95,7 +95,7 @@ export class QueryBuilder<T> {
 
   constructor(
     private schemaName: string,
-    private schemaRegistry: SchemaRegistry,
+    private schemaRegistry: SchemaRegistryType,
     private executor: (context: QueryContext<T>) => Observable<T[]>,
     private rawExecutor?: (config: RawQueryConfig) => Observable<T[]>,
     schema?: Type<T>
@@ -449,7 +449,7 @@ export class QueryBuilder<T> {
  */
 export function createQueryBuilder<T>(
   schemaName: string,
-  schemaRegistry: SchemaRegistry,
+  schemaRegistry: SchemaRegistryType,
   executor: (context: QueryContext<T>) => Observable<T[]>,
   rawExecutor?: (config: RawQueryConfig) => Observable<T[]>,
   schema?: Type<T>

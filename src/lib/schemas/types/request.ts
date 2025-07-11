@@ -1,5 +1,5 @@
 import { type } from "arktype";
-import { isoDateSchema } from "./schemas";
+import { isoDateSchema } from "../schemas";
 
 export const searchSortSchema = type({
   timestamp: isoDateSchema,

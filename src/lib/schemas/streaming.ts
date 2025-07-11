@@ -26,7 +26,7 @@ import {
   tap,
   withLatestFrom
 } from "rxjs/operators";
-import type { PaginatedResponse, StreamOptions } from "./types";
+import type { PaginatedResponse, StreamOptions } from "../api/types";
 
 /**
  * Stream processor for handling data transformations.

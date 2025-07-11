@@ -1,13 +1,20 @@
 import { defineConfig } from "vitest/config";
 
-const testInclude = ["./src/**/*.test.ts"];
-const coverageInclude = ["./src/**/*.ts"];
+const include = ["./src/**/*.test.ts"];
 const exclude = ["node_modules/**", "**/node_modules/**"];
 
 export default defineConfig({
-  plugins: [],
+  resolve: {
+    alias: {
+      $util: "./src/lib/util",
+      $schemas: "./src/lib/schemas",
+      $api: "./src/lib/api",
+      $core: "./src/lib/core",
+      $clients: "./src/lib/clients"
+    }
+  },
   test: {
-    include: testInclude,
+    include,
     exclude,
     bail: 5,
     maxConcurrency: 10,
@@ -16,7 +23,6 @@ export default defineConfig({
     silent: false,
     update: false,
     hideSkippedTests: true,
-    name: "notion-sync",
     typecheck: {
       enabled: true
     },

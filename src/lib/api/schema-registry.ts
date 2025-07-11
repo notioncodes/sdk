@@ -8,7 +8,7 @@
 import { ArkErrors, type, Type } from "arktype";
 import { BehaviorSubject, Observable } from "rxjs";
 import { distinctUntilChanged, map } from "rxjs/operators";
-import type { SchemaRegistry } from "./types";
+import type { SchemaRegistryType } from "./types";
 
 /**
  * Schema entry with metadata.
@@ -34,7 +34,7 @@ export interface ValidationResult<T> {
 /**
  * Implementation of the schema registry with reactive capabilities.
  */
-export class SchemaRegistryImpl implements SchemaRegistry {
+export class SchemaRegistry implements SchemaRegistryType {
   private schemas = new Map<string, SchemaEntry>();
   private schemaSubject = new BehaviorSubject<Map<string, SchemaEntry>>(new Map());
 
@@ -317,6 +317,11 @@ export interface SerializedSchemaEntry {
 }
 
 /**
+ * Alias for SchemaRegistry for backward compatibility.
+ */
+export class SchemaRegistryImpl extends SchemaRegistry {}
+
+/**
  * Global schema registry instance.
  */
-export const schemaRegistry = new SchemaRegistryImpl();
+export const schemaRegistry = new SchemaRegistry();

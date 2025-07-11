@@ -7,7 +7,7 @@
 
 import { Type } from "arktype";
 import { Observable } from "rxjs";
-import type { NamingConfig } from "../../util/naming";
+import type { NamingConfig } from "../util/naming";
 
 /**
  * API access tiers for different levels of abstraction.
@@ -155,7 +155,7 @@ export type ProxyHandler<T> = {
 /**
  * Schema registry for dynamic type validation.
  */
-export interface SchemaRegistry {
+export interface SchemaRegistryType {
   register<T>(name: string, schema: Type<T>): void;
   get<T>(name: string): Type<T> | undefined;
   validate<T>(name: string, value: unknown): T;

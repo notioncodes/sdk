@@ -8,8 +8,8 @@
 import { Type } from "arktype";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import type { NamingConfig } from "../../util/naming";
-import { transformFromNotion, transformToNotion } from "../../util/transformer";
+import type { NamingConfig } from "../util/naming";
+import { transformFromNotion, transformToNotion } from "../util/transformer";
 import type { BidirectionalTransform, DatabaseSchema, PropertySchema, RelationSchema } from "./types";
 import { PropertyDataType } from "./types";
 

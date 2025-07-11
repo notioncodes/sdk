@@ -17,8 +17,8 @@ import { of } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { TestScheduler } from "rxjs/testing";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { SchemaRegistryImpl } from "../../api/core/schema-registry";
-import { QueryOperator } from "../../api/core/types";
+import { SchemaRegistryImpl } from "../../api/schema-registry";
+import { QueryOperator } from "../../api/types";
 import { createQueryBuilder, QueryBuilder, QueryUtils } from "./builder";
 
 // Test data interfaces and schemas

@@ -1,35 +1,9 @@
 import { scope, type } from "arktype";
-import type { BlockId, CommentId, DatabaseId, PageId, UserId, WorkspaceId } from "./brands";
 
 /**
- * Schema for PageId validation.
+ * Schema for notion id validation.
  */
-export const pageIdSchema = type("string");
-
-/**
- * Schema for DatabaseId validation.
- */
-export const databaseIdSchema = type("string");
-
-/**
- * Schema for BlockId validation.
- */
-export const blockIdSchema = type("string");
-
-/**
- * Schema for UserId validation.
- */
-export const userIdSchema = type("string");
-
-/**
- * Schema for CommentId validation.
- */
-export const commentIdSchema = type("string");
-
-/**
- * Schema for WorkspaceId validation.
- */
-export const workspaceIdSchema = type("string");
+export const idSchema = type("/^(.{8})(.{4})(.{4})(.{4})(.{12})$/");
 
 /**
  * Schema for UUID validation.
@@ -42,16 +16,16 @@ export const uuidSchema = type("/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4
 export const isoDateSchema = type("/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{3})?Z?$/");
 
 /**
- * Schema for API colors.
+ * Schema for colors.
  */
-export const apiColorSchema = type(
+export const colorSchema = type(
   '"default" | "gray" | "brown" | "orange" | "yellow" | "green" | "blue" | "purple" | "pink" | "red" | "gray_background" | "brown_background" | "orange_background" | "yellow_background" | "green_background" | "blue_background" | "purple_background" | "pink_background" | "red_background"'
 );
 
 /**
- * Type representing API colors.
+ * Type representing colors.
  */
-export type ApiColor = typeof apiColorSchema.infer;
+export type Color = typeof colorSchema.infer;
 
 /**
  * Schema for emoji strings.
@@ -101,7 +75,7 @@ export type File = typeof fileSchema.infer;
 /**
  * Create a scope for icon-related schemas.
  */
-const iconScope = scope({
+export const iconScope = scope({
   emojiIcon: {
     type: '"emoji"',
     emoji: emojiSchema
@@ -114,7 +88,15 @@ const iconScope = scope({
     type: '"file"',
     file: internalFileSchema
   },
-  icon: "emojiIcon | externalIcon | fileIcon"
+  customEmojiIcon: {
+    type: '"custom_emoji"',
+    custom_emoji: {
+      id: "string",
+      name: "string",
+      url: "string"
+    }
+  },
+  icon: "emojiIcon | externalIcon | fileIcon | customEmojiIcon"
 }).export();
 
 /**
@@ -193,7 +175,7 @@ export const annotationsSchema = type({
   strikethrough: "boolean",
   underline: "boolean",
   code: "boolean",
-  color: apiColorSchema
+  color: colorSchema
 });
 
 /**
@@ -205,9 +187,9 @@ export type Annotations = typeof annotationsSchema.infer;
  * Create a scope for text content schemas.
  */
 const textScope = scope({
-  linkObject: { url: "string" },
+  linkObject: { url: "string <= 2000" },
   textContent: {
-    content: "string",
+    content: "string <= 2000",
     "link?": "linkObject | null"
   }
 }).export();
@@ -224,8 +206,8 @@ export const richTextItemSchema = type({
   type: '"text"',
   text: textContentSchema,
   annotations: annotationsSchema,
-  plain_text: "string",
-  "href?": "string | null"
+  plain_text: "string <= 2000",
+  "href?": "string <= 2000 | null"
 });
 
 /**
@@ -248,7 +230,7 @@ export type RichText = typeof richTextSchema.infer;
  */
 export const userSchema = type({
   object: '"user"',
-  id: userIdSchema
+  id: idSchema
 });
 
 /**
@@ -263,7 +245,7 @@ export const userMentionSchema = type({
   type: '"user"',
   user: {
     object: '"user"',
-    id: "string"
+    id: idSchema
   }
 });
 
@@ -272,7 +254,7 @@ export const userMentionSchema = type({
  */
 export const pageMentionSchema = type({
   type: '"page"',
-  page: { id: "string" }
+  page: { id: idSchema }
 });
 
 /**
@@ -280,7 +262,7 @@ export const pageMentionSchema = type({
  */
 export const databaseMentionSchema = type({
   type: '"database"',
-  database: { id: "string" }
+  database: { id: idSchema }
 });
 
 /**
@@ -315,63 +297,3 @@ export const mentionItemSchema = mentionScope.mentionItem;
  * Type representing a mention.
  */
 export type MentionItem = typeof mentionItemSchema.infer;
-
-/**
- * Type guard to check if a value is a PageId.
- *
- * @param value - The value to check.
- * @returns True if the value is a PageId.
- */
-export function isPageId(value: unknown): value is PageId {
-  return typeof value === "string" && value.startsWith("page_");
-}
-
-/**
- * Type guard to check if a value is a DatabaseId.
- *
- * @param value - The value to check.
- * @returns True if the value is a DatabaseId.
- */
-export function isDatabaseId(value: unknown): value is DatabaseId {
-  return typeof value === "string" && value.startsWith("db_");
-}
-
-/**
- * Type guard to check if a value is a BlockId.
- *
- * @param value - The value to check.
- * @returns True if the value is a BlockId.
- */
-export function isBlockId(value: unknown): value is BlockId {
-  return typeof value === "string" && value.startsWith("block_");
-}
-
-/**
- * Type guard to check if a value is a UserId.
- *
- * @param value - The value to check.
- * @returns True if the value is a UserId.
- */
-export function isUserId(value: unknown): value is UserId {
-  return typeof value === "string" && value.startsWith("user_");
-}
-
-/**
- * Type guard to check if a value is a CommentId.
- *
- * @param value - The value to check.
- * @returns True if the value is a CommentId.
- */
-export function isCommentId(value: unknown): value is CommentId {
-  return typeof value === "string" && value.startsWith("comment_");
-}
-
-/**
- * Type guard to check if a value is a WorkspaceId.
- *
- * @param value - The value to check.
- * @returns True if the value is a WorkspaceId.
- */
-export function isWorkspaceId(value: unknown): value is WorkspaceId {
-  return typeof value === "string" && value.startsWith("workspace_");
-}

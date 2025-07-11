@@ -20,12 +20,12 @@ import type { BlockId } from "./brands";
 
 describe("Block Schemas", () => {
   const baseBlockProperties = {
-    id: "block_123" as BlockId,
+    id: "16ad7342e57180c4a065c7a1015871d3" as BlockId,
     object: "block" as const,
     created_time: "2023-01-01T00:00:00.000Z",
-    created_by: { object: "user" as const, id: "user_123" },
+    created_by: { object: "user" as const, id: "16ad7342e57180c4a065c7a1015871d3" },
     last_edited_time: "2023-01-01T00:00:00.000Z",
-    last_edited_by: { object: "user" as const, id: "user_123" },
+    last_edited_by: { object: "user" as const, id: "16ad7342e57180c4a065c7a1015871d3" },
     has_children: false,
     archived: false
   };
@@ -460,8 +460,8 @@ describe("Block Schemas", () => {
 
   describe("Type Utilities", () => {
     it("should correctly identify blocks", () => {
-      expect(isBlock({ object: "block", id: "block_123" as BlockId })).toBe(true);
-      expect(isBlock({ object: "page", id: "page_123" })).toBe(false);
+      expect(isBlock({ object: "block", id: "16ad7342e57180c4a065c7a1015871d3" as BlockId })).toBe(true);
+      expect(isBlock({ object: "page", id: "16ad7342e57180c4a065c7a1015871d3" })).toBe(false);
       expect(isBlock(null)).toBe(false);
       expect(isBlock(undefined)).toBe(false);
     });
@@ -481,6 +481,66 @@ describe("Block Schemas", () => {
       expect(hasChildren({ has_children: true } as any)).toBe(true);
       expect(hasChildren({ has_children: false } as any)).toBe(false);
       expect(hasChildren({} as any)).toBe(false);
+    });
+  });
+
+  describe("Rich Text Array Validation", () => {
+    it("should validate rich text array with correct length", () => {
+      const validArray = Array(50).fill({
+        type: "text",
+        text: { content: "test", link: null },
+        annotations: {
+          bold: false,
+          italic: false,
+          strikethrough: false,
+          underline: false,
+          code: false,
+          color: "default"
+        },
+        plain_text: "test",
+        href: null
+      });
+
+      const block = {
+        ...baseBlockProperties,
+        type: "paragraph",
+        paragraph: {
+          rich_text: validArray,
+          color: "default"
+        }
+      };
+
+      const result = paragraphBlockSchema(block);
+      expect(result).toEqual(block);
+    });
+
+    it("should reject rich text array with too many elements", () => {
+      const invalidArray = Array(101).fill({
+        type: "text",
+        text: { content: "test", link: null },
+        annotations: {
+          bold: false,
+          italic: false,
+          strikethrough: false,
+          underline: false,
+          code: false,
+          color: "default"
+        },
+        plain_text: "test",
+        href: null
+      });
+
+      const block = {
+        ...baseBlockProperties,
+        type: "paragraph",
+        paragraph: {
+          rich_text: invalidArray,
+          color: "default"
+        }
+      };
+
+      const result = paragraphBlockSchema(block);
+      expect(result).toHaveProperty(" arkKind", "errors");
     });
   });
 });

@@ -4,14 +4,14 @@ import { fullPageSchema, getPageTitle, isFullPage, isPage, pagePropertiesSchema,
 
 describe("Page Schemas", () => {
   const basePageProperties = {
-    id: "page_123" as PageId,
+    id: "16ad7342e57180c4a065c7a1015871d3" as PageId,
     object: "page" as const,
     created_time: "2023-01-01T00:00:00.000Z",
-    created_by: { object: "user" as const, id: "user_123" },
+    created_by: { object: "user" as const, id: "16ad7342e57180c4a065c7a1015871d3" },
     last_edited_time: "2023-01-01T00:00:00.000Z",
-    last_edited_by: { object: "user" as const, id: "user_123" },
+    last_edited_by: { object: "user" as const, id: "16ad7342e57180c4a065c7a1015871d3" },
     archived: false,
-    url: "https://notion.so/page_123"
+    url: "https://www.notion.so/Introduction-22dd7342e57180e6a6e2d866c8627272?pvs=9"
   };
 
   describe("Page Properties Schema", () => {

@@ -1,5 +1,5 @@
+export * from "../schemas/lazy-schema-loader";
+export * from "../schemas/streaming";
 export * from "./database-schema";
-export * from "./proxy-context";
 export * from "./schema-registry";
-export * from "./streaming";
 export * from "./types";

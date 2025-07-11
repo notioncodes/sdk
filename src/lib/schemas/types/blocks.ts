@@ -1,7 +1,53 @@
 import { type } from "arktype";
-import { apiColorSchema, fileSchema, iconSchema, isoDateSchema, richTextSchema } from "./schemas";
+import { colorSchema, fileSchema, iconSchema, isoDateSchema } from "../schemas";
 
-const baseBlockProperties = {
+/**
+ * Rich text schema with validation for content and link URL limits.
+ * Ensures text content does not exceed 2000 characters and link URLs do not exceed 2000 characters.
+ */
+const richTextSchema = type({
+  type: '"text" | "mention" | "equation"',
+  "text?": {
+    content: "string<=2000",
+    "link?": [{ url: "string<=2000" }, "|", "null"]
+  },
+  "mention?": "unknown",
+  "equation?": {
+    expression: "string<=1000"
+  },
+  annotations: {
+    bold: "boolean",
+    italic: "boolean",
+    strikethrough: "boolean",
+    underline: "boolean",
+    code: "boolean",
+    color: colorSchema
+  },
+  plain_text: "string",
+  "href?": "string|null"
+});
+
+/**
+ * Array of rich text objects with maximum 100 elements limit.
+ */
+const richTextArraySchema = richTextSchema.array().atMostLength(100);
+
+/**
+ * URL schema with 2000 character limit.
+ */
+const urlSchema = type("string<=2000");
+
+/**
+ * Email schema with 200 character limit.
+ */
+const emailSchema = type("string<=200");
+
+/**
+ * Phone number schema with 200 character limit.
+ */
+const phoneSchema = type("string<=200");
+
+const baseBlock = {
   id: "string",
   object: '"block"' as const,
   created_time: isoDateSchema,
@@ -26,22 +72,22 @@ const baseBlockProperties = {
 } as const;
 
 export const paragraphBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"paragraph"',
   paragraph: {
-    rich_text: richTextSchema,
-    color: apiColorSchema
+    rich_text: richTextArraySchema,
+    color: colorSchema
   }
 });
 
 export type ParagraphBlock = typeof paragraphBlockSchema.infer;
 
 export const heading1BlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"heading_1"',
   heading_1: {
-    rich_text: richTextSchema,
-    color: apiColorSchema,
+    rich_text: richTextArraySchema,
+    color: colorSchema,
     is_toggleable: "boolean"
   }
 });
@@ -49,11 +95,11 @@ export const heading1BlockSchema = type({
 export type Heading1Block = typeof heading1BlockSchema.infer;
 
 export const heading2BlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"heading_2"',
   heading_2: {
-    rich_text: richTextSchema,
-    color: apiColorSchema,
+    rich_text: richTextArraySchema,
+    color: colorSchema,
     is_toggleable: "boolean"
   }
 });
@@ -61,11 +107,11 @@ export const heading2BlockSchema = type({
 export type Heading2Block = typeof heading2BlockSchema.infer;
 
 export const heading3BlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"heading_3"',
   heading_3: {
-    rich_text: richTextSchema,
-    color: apiColorSchema,
+    rich_text: richTextArraySchema,
+    color: colorSchema,
     is_toggleable: "boolean"
   }
 });
@@ -73,56 +119,56 @@ export const heading3BlockSchema = type({
 export type Heading3Block = typeof heading3BlockSchema.infer;
 
 export const bulletedListItemBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"bulleted_list_item"',
   bulleted_list_item: {
-    rich_text: richTextSchema,
-    color: apiColorSchema
+    rich_text: richTextArraySchema,
+    color: colorSchema
   }
 });
 
 export type BulletedListItemBlock = typeof bulletedListItemBlockSchema.infer;
 
 export const numberedListItemBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"numbered_list_item"',
   numbered_list_item: {
-    rich_text: richTextSchema,
-    color: apiColorSchema
+    rich_text: richTextArraySchema,
+    color: colorSchema
   }
 });
 
 export type NumberedListItemBlock = typeof numberedListItemBlockSchema.infer;
 
 export const toDoBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"to_do"',
   to_do: {
-    rich_text: richTextSchema,
+    rich_text: richTextArraySchema,
     checked: "boolean",
-    color: apiColorSchema
+    color: colorSchema
   }
 });
 
 export type TodoBlock = typeof toDoBlockSchema.infer;
 
 export const toggleBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"toggle"',
   toggle: {
-    rich_text: richTextSchema,
-    color: apiColorSchema
+    rich_text: richTextArraySchema,
+    color: colorSchema
   }
 });
 
 export type ToggleBlock = typeof toggleBlockSchema.infer;
 
 export const codeBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"code"',
   code: {
-    rich_text: richTextSchema,
-    caption: richTextSchema,
+    rich_text: richTextArraySchema,
+    caption: richTextArraySchema,
     language: "string"
   }
 });
@@ -130,7 +176,7 @@ export const codeBlockSchema = type({
 export type CodeBlock = typeof codeBlockSchema.infer;
 
 export const childPageBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"child_page"',
   child_page: {
     title: "string"
@@ -140,7 +186,7 @@ export const childPageBlockSchema = type({
 export type ChildPageBlock = typeof childPageBlockSchema.infer;
 
 export const childDatabaseBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"child_database"',
   child_database: {
     title: "string"
@@ -150,18 +196,18 @@ export const childDatabaseBlockSchema = type({
 export type ChildDatabaseBlock = typeof childDatabaseBlockSchema.infer;
 
 export const embedBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"embed"',
   embed: {
-    "url?": "string",
-    "caption?": richTextSchema
+    "url?": urlSchema,
+    "caption?": richTextArraySchema
   }
 });
 
 export type EmbedBlock = typeof embedBlockSchema.infer;
 
 export const imageBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"image"',
   image: fileSchema
 });
@@ -169,7 +215,7 @@ export const imageBlockSchema = type({
 export type ImageBlock = typeof imageBlockSchema.infer;
 
 export const videoBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"video"',
   video: fileSchema
 });
@@ -177,7 +223,7 @@ export const videoBlockSchema = type({
 export type VideoBlock = typeof videoBlockSchema.infer;
 
 export const fileBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"file"',
   file: fileSchema
 });
@@ -185,7 +231,7 @@ export const fileBlockSchema = type({
 export type FileBlock = typeof fileBlockSchema.infer;
 
 export const pdfBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"pdf"',
   pdf: fileSchema
 });
@@ -193,7 +239,7 @@ export const pdfBlockSchema = type({
 export type PdfBlock = typeof pdfBlockSchema.infer;
 
 export const audioBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"audio"',
   audio: fileSchema
 });
@@ -201,51 +247,51 @@ export const audioBlockSchema = type({
 export type AudioBlock = typeof audioBlockSchema.infer;
 
 export const bookmarkBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"bookmark"',
   bookmark: {
-    url: "string",
-    "caption?": richTextSchema
+    url: urlSchema,
+    "caption?": richTextArraySchema
   }
 });
 
 export type BookmarkBlock = typeof bookmarkBlockSchema.infer;
 
 export const calloutBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"callout"',
   callout: {
-    rich_text: richTextSchema,
+    rich_text: richTextArraySchema,
     icon: iconSchema,
-    color: apiColorSchema
+    color: colorSchema
   }
 });
 
 export type CalloutBlock = typeof calloutBlockSchema.infer;
 
 export const quoteBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"quote"',
   quote: {
-    rich_text: richTextSchema,
-    color: apiColorSchema
+    rich_text: richTextArraySchema,
+    color: colorSchema
   }
 });
 
 export type QuoteBlock = typeof quoteBlockSchema.infer;
 
 export const equationBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"equation"',
   equation: {
-    expression: "string"
+    expression: "string<=1000"
   }
 });
 
 export type EquationBlock = typeof equationBlockSchema.infer;
 
 export const dividerBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"divider"',
   divider: type({})
 });
@@ -253,17 +299,17 @@ export const dividerBlockSchema = type({
 export type DividerBlock = typeof dividerBlockSchema.infer;
 
 export const tableOfContentsBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"table_of_contents"',
   table_of_contents: {
-    "color?": apiColorSchema
+    "color?": colorSchema
   }
 });
 
 export type TableOfContentsBlock = typeof tableOfContentsBlockSchema.infer;
 
 export const columnBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"column"',
   column: type({})
 });
@@ -271,7 +317,7 @@ export const columnBlockSchema = type({
 export type ColumnBlock = typeof columnBlockSchema.infer;
 
 export const columnListBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"column_list"',
   column_list: type({})
 });
@@ -279,17 +325,17 @@ export const columnListBlockSchema = type({
 export type ColumnListBlock = typeof columnListBlockSchema.infer;
 
 export const linkPreviewBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"link_preview"',
   link_preview: {
-    url: "string"
+    url: urlSchema
   }
 });
 
 export type LinkPreviewBlock = typeof linkPreviewBlockSchema.infer;
 
 export const syncedBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   /**
    * Schema for a synced block in Notion.
    *
@@ -309,17 +355,17 @@ export const syncedBlockSchema = type({
 export type SyncedBlock = typeof syncedBlockSchema.infer;
 
 export const templateBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"template"',
   template: {
-    rich_text: richTextSchema
+    rich_text: richTextArraySchema
   }
 });
 
 export type TemplateBlock = typeof templateBlockSchema.infer;
 
 export const linkToPageBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"link_to_page"',
   link_to_page: {
     type: '"page_id" | "database_id"',
@@ -331,7 +377,7 @@ export const linkToPageBlockSchema = type({
 export type LinkToPageBlock = typeof linkToPageBlockSchema.infer;
 
 export const tableBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"table"',
   table: {
     table_width: "number",
@@ -343,17 +389,17 @@ export const tableBlockSchema = type({
 export type TableBlock = typeof tableBlockSchema.infer;
 
 export const tableRowBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"table_row"',
   table_row: {
-    cells: [richTextSchema, "[]"]
+    cells: [richTextArraySchema, "[]"]
   }
 });
 
 export type TableRowBlock = typeof tableRowBlockSchema.infer;
 
 export const breadcrumbBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"breadcrumb"',
   breadcrumb: type({})
 });
@@ -361,7 +407,7 @@ export const breadcrumbBlockSchema = type({
 export type BreadcrumbBlock = typeof breadcrumbBlockSchema.infer;
 
 export const unsupportedBlockSchema = type({
-  ...baseBlockProperties,
+  ...baseBlock,
   type: '"unsupported"',
   unsupported: type({})
 });
@@ -421,6 +467,10 @@ export type Block =
   | AudioBlock
   | UnsupportedBlock;
 
+/**
+ * Type guard to check if a value is a valid Block.
+ * Validates that the object has the required block structure with proper object type and ID.
+ */
 export function isBlock(value: unknown): value is Block {
   return (
     value !== null &&
@@ -433,10 +483,82 @@ export function isBlock(value: unknown): value is Block {
   );
 }
 
+/**
+ * Extracts the block type from a block object.
+ *
+ * @param block - Block object with a type property
+ * @returns The block type as a string
+ */
 export function getBlockType(block: { type: string }): string {
   return block.type;
 }
 
+/**
+ * Checks if a block has children.
+ *
+ * @param block - Block object that may have children
+ * @returns True if the block has children, false otherwise
+ */
 export function hasChildren(block: { has_children?: boolean }): boolean {
   return block.has_children === true;
+}
+
+/**
+ * Validates that a rich text array does not exceed the 100 element limit.
+ *
+ * @param richTextArray - Array of rich text objects to validate
+ * @returns True if the array is within limits, false otherwise
+ */
+export function validateRichTextArrayLength(richTextArray: unknown[]): boolean {
+  return Array.isArray(richTextArray) && richTextArray.length <= 100;
+}
+
+/**
+ * Validates that a URL string does not exceed the 2000 character limit.
+ *
+ * @param url - URL string to validate
+ * @returns True if the URL is within limits, false otherwise
+ */
+export function validateUrlLength(url: string): boolean {
+  return typeof url === "string" && url.length <= 2000;
+}
+
+/**
+ * Validates that an email string does not exceed the 200 character limit.
+ *
+ * @param email - Email string to validate
+ * @returns True if the email is within limits, false otherwise
+ */
+export function validateEmailLength(email: string): boolean {
+  return typeof email === "string" && email.length <= 200;
+}
+
+/**
+ * Validates that a phone number string does not exceed the 200 character limit.
+ *
+ * @param phone - Phone number string to validate
+ * @returns True if the phone number is within limits, false otherwise
+ */
+export function validatePhoneLength(phone: string): boolean {
+  return typeof phone === "string" && phone.length <= 200;
+}
+
+/**
+ * Validates that an equation expression does not exceed the 1000 character limit.
+ *
+ * @param expression - Equation expression string to validate
+ * @returns True if the expression is within limits, false otherwise
+ */
+export function validateEquationExpressionLength(expression: string): boolean {
+  return typeof expression === "string" && expression.length <= 1000;
+}
+
+/**
+ * Validates that rich text content does not exceed the 2000 character limit.
+ *
+ * @param content - Rich text content string to validate
+ * @returns True if the content is within limits, false otherwise
+ */
+export function validateRichTextContentLength(content: string): boolean {
+  return typeof content === "string" && content.length <= 2000;
 }
