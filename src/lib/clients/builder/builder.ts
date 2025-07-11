@@ -17,7 +17,7 @@ import type { QueryOperator, SchemaRegistryType, StreamOptions } from "../../api
 /**
  * Query condition for filtering.
  */
-interface QueryCondition<T> {
+export interface QueryCondition<T> {
   field: keyof T;
   operator: QueryOperator;
   value: any;
@@ -26,7 +26,7 @@ interface QueryCondition<T> {
 /**
  * Sort specification.
  */
-interface SortSpec<T> {
+export interface SortSpec<T> {
   field: keyof T;
   direction: "asc" | "desc";
 }
@@ -34,7 +34,7 @@ interface SortSpec<T> {
 /**
  * Query execution context.
  */
-interface QueryContext<T> {
+export interface ReadContext<T> {
   conditions: QueryCondition<T>[];
   sorts: SortSpec<T>[];
   limitValue?: number;
@@ -43,10 +43,16 @@ interface QueryContext<T> {
   selectedFields?: (keyof T)[];
 }
 
+export interface WriteContext<T> {
+  schema: Type<T>;
+}
+
+export type Context<T> = ReadContext<T> | WriteContext<T>;
+
 /**
  * Raw query configuration for escape hatch scenarios.
  */
-interface RawQueryConfig {
+export interface RawQueryConfig {
   query: string;
   params?: any[];
   skipValidation?: boolean;
@@ -55,7 +61,7 @@ interface RawQueryConfig {
 /**
  * Batch configuration for streaming.
  */
-interface BatchConfig {
+export interface BatchConfig {
   bufferSize: number;
   throttleMs: number;
   retryCount: number;
@@ -65,7 +71,7 @@ interface BatchConfig {
 /**
  * Helper function to validate data with ArkType schema.
  */
-function validateWithSchema<T>(schema: Type<T>, data: unknown): Observable<T> {
+export function validateWithSchema<T>(schema: Type<T>, data: unknown): Observable<T> {
   const validated = schema(data);
 
   // ArkType returns an array of errors for invalid data
@@ -83,7 +89,7 @@ function validateWithSchema<T>(schema: Type<T>, data: unknown): Observable<T> {
  * Reactive query builder with RxJS observables.
  */
 export class QueryBuilder<T> {
-  private context: QueryContext<T> = {
+  private context: ReadContext<T> = {
     conditions: [],
     sorts: [],
     includes: []
@@ -91,12 +97,12 @@ export class QueryBuilder<T> {
 
   private rawQuery?: RawQueryConfig;
   private schema?: Type<T>;
-  private contextSubject = new BehaviorSubject<QueryContext<T>>(this.context);
+  private contextSubject = new BehaviorSubject<ReadContext<T>>(this.context);
 
   constructor(
     private schemaName: string,
     private schemaRegistry: SchemaRegistryType,
-    private executor: (context: QueryContext<T>) => Observable<T[]>,
+    private executor: (context: ReadContext<T>) => Observable<T[]>,
     private rawExecutor?: (config: RawQueryConfig) => Observable<T[]>,
     schema?: Type<T>
   ) {
@@ -154,7 +160,7 @@ export class QueryBuilder<T> {
   select<K extends keyof T>(...fields: K[]): QueryBuilder<Pick<T, K>> {
     const newContext = { ...this.context, selectedFields: fields as (keyof T)[] };
 
-    const executor = (ctx: QueryContext<Pick<T, K>>): Observable<Pick<T, K>[]> => {
+    const executor = (ctx: ReadContext<Pick<T, K>>): Observable<Pick<T, K>[]> => {
       const mergedContext = {
         ...newContext,
         ...ctx,
@@ -162,7 +168,7 @@ export class QueryBuilder<T> {
         selectedFields: fields as (keyof T)[]
       };
 
-      return this.executor(mergedContext as QueryContext<T>).pipe(
+      return this.executor(mergedContext as ReadContext<T>).pipe(
         map((results) =>
           results.map((item) => {
             const picked: any = {};
@@ -355,7 +361,7 @@ export class QueryBuilder<T> {
   /**
    * Get the current query context as an observable.
    */
-  getContext(): Observable<QueryContext<T>> {
+  getContext(): Observable<ReadContext<T>> {
     return this.contextSubject.asObservable();
   }
 
@@ -450,7 +456,7 @@ export class QueryBuilder<T> {
 export function createQueryBuilder<T>(
   schemaName: string,
   schemaRegistry: SchemaRegistryType,
-  executor: (context: QueryContext<T>) => Observable<T[]>,
+  executor: (context: ReadContext<T>) => Observable<T[]>,
   rawExecutor?: (config: RawQueryConfig) => Observable<T[]>,
   schema?: Type<T>
 ): QueryBuilder<T> {
@@ -526,4 +532,4 @@ export const QueryUtils = {
 };
 
 // Export types for external use
-export type { BatchConfig, QueryCondition, QueryContext, RawQueryConfig, SortSpec };
+export type { BatchConfig, QueryCondition, ReadContext as QueryContext, RawQueryConfig, SortSpec };

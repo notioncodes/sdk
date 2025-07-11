@@ -30,7 +30,7 @@ const richTextSchema = type({
 /**
  * Array of rich text objects with maximum 100 elements limit.
  */
-const richTextArraySchema = richTextSchema.array().atMostLength(100);
+export const richTextArraySchema = richTextSchema.array().atMostLength(100);
 
 /**
  * URL schema with 2000 character limit.

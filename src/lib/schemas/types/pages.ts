@@ -1,11 +1,25 @@
 import { type } from "arktype";
 import { arkToNever, type InferredType } from "../../util/types";
 import { coverSchema, iconSchema, idSchema, parentSchema, userSchema } from "../schemas";
+import { richTextArraySchema } from "./blocks";
 import type { BlockId, DatabaseId, PageId } from "./brands";
+import { titleBasePropertySchema } from "./common";
 
 export const pagePropertiesSchema = type("Record<string, unknown>");
 
 export type PageProperties = InferredType<typeof pagePropertiesSchema>;
+
+/**
+ * Page title property value schema containing rich text content.
+ * Used for actual title values in Notion pages.
+ */
+export const pageTitlePropertyValueSchema = type({
+  ...titleBasePropertySchema,
+  type: '"title"',
+  title: richTextArraySchema
+});
+
+export type PageTitlePropertyValue = typeof pageTitlePropertyValueSchema.infer;
 
 export const pageSchema = type({
   object: '"page"',

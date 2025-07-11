@@ -1,6 +1,6 @@
 import { defineConfig } from "vitest/config";
 
-const include = ["./src/**/*.test.ts"];
+const include = ["./src/**/*.test.ts", "./test/**/*.test.ts"];
 const exclude = ["node_modules/**", "**/node_modules/**"];
 
 export default defineConfig({

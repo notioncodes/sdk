@@ -1,5 +1,6 @@
 import { type, Type } from "arktype";
 import { parentSchema, userSchema } from "../schemas";
+import { databasePropertySchema, pagePropertyValueSchema } from "./properties";
 
 /**
  * API error schema for structured error handling.
@@ -18,14 +19,14 @@ export type APIError = typeof apiErrorSchema.infer;
 export const createApiResponseSchema = <T>(dataSchema: Type<T>) =>
   type({
     data: dataSchema,
-    "metadata?": responseMetadataSchema,
+    "metadata?": apiResponseMetadataSchema,
     "errors?": apiErrorSchema.array()
   });
 
 /**
  * Base response metadata schema for all Notion API responses.
  */
-export const responseMetadataSchema = type({
+export const apiResponseMetadataSchema = type({
   "request_id?": "string",
   "timestamp?": "Date",
   "rate_limit?": type({
@@ -36,7 +37,7 @@ export const responseMetadataSchema = type({
   "cached?": "boolean"
 });
 
-export type ResponseMetadata = typeof responseMetadataSchema.infer;
+export type ResponseMetadata = typeof apiResponseMetadataSchema.infer;
 
 /**
  * Pagination parameters schema for cursor-based pagination.
@@ -67,9 +68,10 @@ export const createPaginatedResponseSchema = <T>(itemSchema: Type<T>) =>
     data: itemSchema.array(),
     has_more: "boolean",
     "next_cursor?": "string",
-    "metadata?": responseMetadataSchema,
+    "metadata?": apiResponseMetadataSchema,
     "errors?": apiErrorSchema.array()
   });
+
 /**
  * Valid list response types based on Notion API specification.
  */
@@ -139,7 +141,7 @@ export const pageOrDatabaseSchema = type({
   url: "string",
   "public_url?": "string | null",
   parent: parentSchema,
-  properties: type("Record<string, unknown>"),
+  properties: type([pagePropertyValueSchema, databasePropertySchema]),
   created_by: userSchema,
   last_edited_by: userSchema
 });
@@ -163,7 +165,7 @@ export class NotionResponseCommand<T> {
       success: "boolean",
       data: this.schema,
       "error?": apiErrorSchema,
-      "metadata?": responseMetadataSchema
+      "metadata?": apiResponseMetadataSchema
     });
   }
 

@@ -2,10 +2,23 @@ import type { InferredType } from "$util/types";
 import { type } from "arktype";
 import { coverSchema, iconSchema, idSchema, parentSchema, userSchema } from "../schemas";
 import type { BlockId, DatabaseId, PageId } from "./brands";
+import { emptyObject, titleBasePropertySchema } from "./common";
 
 export const databasePropertiesSchema = type("Record<string, unknown>");
 
 export type DatabaseProperties = InferredType<typeof databasePropertiesSchema>;
+
+/**
+ * Database title property schema with empty configuration object.
+ * Used for defining title columns in Notion databases.
+ */
+export const databaseTitlePropertySchema = type({
+  ...titleBasePropertySchema,
+  name: "string",
+  "title?": emptyObject // optional because it's not required for database properties
+});
+
+export type DatabaseTitleProperty = typeof databaseTitlePropertySchema.infer;
 
 export const databaseSchema = type({
   object: '"database"',

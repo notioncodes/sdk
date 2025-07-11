@@ -1,11 +1,12 @@
+import type { Context } from "$clients/builder/builder";
 import { ArkErrors, type, Type } from "arktype";
 import { BehaviorSubject, Observable, of } from "rxjs";
-import { catchError, map, shareReplay, switchMap, tap } from "rxjs/operators";
+import { tap } from "rxjs/operators";
 import { SchemaRegistry } from "../api/schema-registry";
 import type { SchemaRegistryType } from "../api/types";
 import { log } from "../util/logging";
-import { schemaFactories } from "./factories/factory";
 import { parentSchema, userSchema } from "./schemas";
+import { blockSchema, createPaginatedResponseSchema, databaseSchema, pageSchema } from "./types";
 
 /**
  * Local union schema for page or database results to avoid circular imports.
@@ -24,17 +25,11 @@ const pageOrDatabaseSchema = type({
   last_edited_by: userSchema
 });
 
-/**
- * Schema factory function type.
- */
-type SchemaFactory<T = unknown> = () => Type<T> | Promise<Type<T>>;
+type SchemaResolver<T = unknown> = (ctx: Context<T>) => Observable<Type<T>>;
 
-/**
- * Lazy schema configuration.
- */
 interface LazySchemaConfig {
   name: string;
-  factory: SchemaFactory;
+  resolver: SchemaResolver;
   preload?: boolean;
   metadata?: Record<string, unknown>;
 }
@@ -159,54 +154,9 @@ export class LazySchemaLoader {
 
     this.updateStats({ cacheMisses: this.state.stats.cacheMisses + 1 });
 
-    const schema$ = this.create<T>(config);
-    this.cache.set(name, schema$ as Observable<Type<unknown>>);
+    this.cache.set(name, config.resolver());
 
-    return schema$;
-  }
-
-  /**
-   * Create schema loading observable.
-   */
-  private create<T>(config: LazySchemaConfig): Observable<Type<T>> {
-    return of(config).pipe(
-      tap(() => {
-        this.update((state) => {
-          state.loading.add(config.name);
-        });
-      }),
-      switchMap((cfg) => Promise.resolve(cfg.factory())),
-      map((schema) => schema as Type<T>),
-      tap((schema) => {
-        // Cache the loaded schema
-        this.loaded.set(config.name, {
-          name: config.name,
-          schema: schema as Type<unknown>,
-          loadedAt: new Date(),
-          accessCount: 1,
-          lastAccessed: new Date()
-        });
-
-        // Register with the schema registry if provided
-        if (this.registry) {
-          this.registry.register(config.name, schema as Type<unknown>);
-        }
-
-        this.update((state) => {
-          state.loading.delete(config.name);
-          state.errors.delete(config.name);
-        });
-        this.updateStats({ totalLoaded: this.state.stats.totalLoaded + 1 });
-      }),
-      catchError((error) => {
-        this.update((state) => {
-          state.loading.delete(config.name);
-          state.errors.set(config.name, error);
-        });
-        throw error;
-      }),
-      shareReplay(1)
-    );
+    return config.resolver();
   }
 
   /**
@@ -218,7 +168,11 @@ export class LazySchemaLoader {
         next: (schema) => {
           const result = schema(response);
           if (result instanceof ArkErrors) {
-            reject(new Error(`Validation failed for schema '${schemaName}': ${result.summary}`));
+            log.error(`validation failed for schema '${schemaName}': ${result.summary}`, {
+              schemaName,
+              response
+            });
+            reject(new Error(`validation failed for schema '${schemaName}': ${result.summary}`));
           } else {
             resolve(result as T);
           }
@@ -329,90 +283,95 @@ export const createNotionSchemaLoader = (registry?: SchemaRegistryType): LazySch
 
   loader.register({
     name: "notion.page",
-    factory: schemaFactories.responses.page,
+    resolver: (ctx: Context<unknown>) => {
+      console.log("asdf", ctx);
+      return of(pageSchema);
+    },
     metadata: { api: "notion", type: "page" }
   });
 
-  loader.register({
-    name: "notion.database",
-    factory: schemaFactories.responses.database,
-    metadata: { api: "notion", type: "database" }
-  });
+  // loader.register({
+  //   name: "notion.database",
+  //   factory: () => schemaFactories.database.create(),
+  //   metadata: { api: "notion", type: "database" }
+  // });
 
-  loader.register({
-    name: "notion.block",
-    factory: schemaFactories.responses.block,
-    metadata: { api: "notion", type: "block" }
-  });
+  // loader.register({
+  //   name: "notion.block",
+  //   factory: schemaFactories.block.create,
+  //   metadata: { api: "notion", type: "block" }
+  // });
 
-  loader.register({
-    name: "notion.user",
-    factory: schemaFactories.responses.user,
-    metadata: { api: "notion", type: "user" }
-  });
+  // loader.register({
+  //   name: "notion.user",
+  //   factory: schemaFactories.user.create,
+  //   metadata: { api: "notion", type: "user" }
+  // });
 
-  loader.register({
-    name: "notion.queryDatabase",
-    factory: schemaFactories.queryDatabaseResponse,
-    metadata: { api: "notion", type: "query", endpoint: "databases/{id}/query" }
-  });
+  // loader.register({
+  //   name: "notion.queryDatabase",
+  //   factory: schemaFactories.database.query,
+  //   metadata: { api: "notion", type: "query" }
+  // });
 
-  loader.register({
-    name: "notion.listDatabases",
-    factory: schemaFactories.listDatabasesResponse,
-    metadata: { api: "notion", type: "list", endpoint: "databases" }
-  });
+  // loader.register({
+  //   name: "notion.listDatabases",
+  //   factory: schemaFactories.database.list,
+  //   metadata: { api: "notion", type: "list" }
+  // });
 
-  loader.register({
-    name: "notion.listBlockChildren",
-    factory: schemaFactories.listBlockChildrenResponse,
-    metadata: { api: "notion", type: "list", endpoint: "blocks/{id}/children" }
-  });
+  // loader.register({
+  //   name: "notion.listBlockChildren",
+  //   factory: schemaFactories.block.list,
+  //   metadata: { api: "notion", type: "list" }
+  // });
 
-  loader.register({
-    name: "notion.search",
-    factory: schemaFactories.searchResponse,
-    metadata: { api: "notion", type: "search", endpoint: "search" }
-  });
+  // loader.register({
+  //   name: "notion.search",
+  //   factory: schemaFactories.page.search,
+  //   metadata: { api: "notion", type: "search" }
+  // });
 
-  loader.register({
-    name: "notion.listUsers",
-    factory: schemaFactories.listUsersResponse,
-    metadata: { api: "notion", type: "list", endpoint: "users" }
-  });
+  // loader.register({
+  //   name: "notion.listUsers",
+  //   factory: schemaFactories.user.list,
+  //   metadata: { api: "notion", type: "list" }
+  // });
 
   return loader;
 };
 
-/**
- * Global lazy schema loader instance.
- */
-export const notionSchemaLoader = createNotionSchemaLoader(new SchemaRegistry());
-
-/**
- * Example usage:
- *
- * ```typescript
- * // Load schema on-demand
- * const pageSchema$ = notionSchemaLoader.loadSchema('notion.page');
- *
- * // Validate response
- * const validatedPage = await notionSchemaLoader.validateResponse(
- *   'notion.page',
- *   apiResponse
- * );
- *
- * // Preload multiple schemas
- * notionSchemaLoader.preloadSchemas([
- *   'notion.page',
- *   'notion.database',
- *   'notion.block'
- * ]).subscribe();
- *
- * // Monitor loading state
- * notionSchemaLoader.state$.subscribe(state => {
- *   console.log('Loading:', Array.from(state.loading));
- *   console.log('Stats:', state.stats);
- * });
- * ```
- */
+export const schemaFactories = {
+  page: {
+    create: () => pageSchema,
+    update: () => pageSchema,
+    delete: () => pageSchema,
+    get: () => pageSchema,
+    list: () => createPaginatedResponseSchema(pageSchema),
+    query: () => createPaginatedResponseSchema(pageSchema),
+    search: () => createPaginatedResponseSchema(pageSchema)
+  },
+  user: {
+    create: () => userSchema,
+    update: () => userSchema,
+    delete: () => userSchema,
+    get: () => userSchema,
+    list: () => createPaginatedResponseSchema(userSchema)
+  },
+  database: {
+    create: () => databaseSchema,
+    update: () => databaseSchema,
+    delete: () => databaseSchema,
+    get: () => databaseSchema,
+    list: () => createPaginatedResponseSchema(databaseSchema),
+    query: () => createPaginatedResponseSchema(databaseSchema),
+    search: () => createPaginatedResponseSchema(databaseSchema)
+  },
+  block: {
+    create: () => blockSchema,
+    update: () => blockSchema,
+    delete: () => blockSchema,
+    get: () => blockSchema,
+    list: () => createPaginatedResponseSchema(blockSchema)
+  }
+};

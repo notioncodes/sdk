@@ -5,8 +5,7 @@
 import { ArkErrors } from "arktype";
 import { firstValueFrom } from "rxjs";
 import { beforeEach, describe, expect, it } from "vitest";
-import { schemaFactories } from "./factories/factory";
-import { createNotionSchemaLoader, LazySchemaLoader } from "./lazy-schema-loader";
+import { createNotionSchemaLoader, LazySchemaLoader, schemaFactories } from "./lazy-schema-loader";
 
 describe("LazySchemaLoader", () => {
   let loader: LazySchemaLoader;
@@ -19,7 +18,7 @@ describe("LazySchemaLoader", () => {
     it("should register a schema configuration", () => {
       const config = {
         name: "test.schema",
-        factory: () => schemaFactories.reponses.page()
+        factory: () => schemaFactories.page.create()
       };
 
       loader.register(config);
@@ -29,7 +28,7 @@ describe("LazySchemaLoader", () => {
     it("should preload schema when preload is true", async () => {
       const config = {
         name: "test.preload",
-        factory: () => schemaFactories.reponses.page(),
+        factory: () => schemaFactories.page.create(),
         preload: true
       };
 
@@ -46,7 +45,7 @@ describe("LazySchemaLoader", () => {
     it("should lazily load a registered schema", async () => {
       const config = {
         name: "test.lazy",
-        factory: () => schemaFactories.reponses.page()
+        factory: () => schemaFactories.page.create()
       };
 
       loader.register(config);
@@ -62,7 +61,7 @@ describe("LazySchemaLoader", () => {
     it("should return cached schema on subsequent loads", async () => {
       const config = {
         name: "test.cache",
-        factory: () => schemaFactories.reponses.page()
+        factory: () => schemaFactories.page.create()
       };
 
       loader.register(config);
@@ -90,7 +89,7 @@ describe("LazySchemaLoader", () => {
     it("should validate a valid page response", async () => {
       const config = {
         name: "notion.page",
-        factory: () => schemaFactories.reponses.page()
+        factory: () => schemaFactories.page.create()
       };
 
       loader.register(config);
@@ -125,7 +124,7 @@ describe("LazySchemaLoader", () => {
     it("should reject invalid page response", async () => {
       const config = {
         name: "notion.page",
-        factory: () => schemaFactories.reponses.page()
+        factory: () => schemaFactories.page.create()
       };
 
       loader.register(config);
@@ -143,7 +142,7 @@ describe("LazySchemaLoader", () => {
     it("should clear specific schema from cache", async () => {
       const config = {
         name: "test.clear",
-        factory: () => schemaFactories.reponses.page()
+        factory: () => schemaFactories.page.create()
       };
 
       loader.register(config);
@@ -161,11 +160,11 @@ describe("LazySchemaLoader", () => {
     it("should clear all schemas from cache", async () => {
       loader.register({
         name: "test.clear1",
-        factory: () => schemaFactories.reponses.page()
+        resolver: () => schemaFactories.page.create()
       });
       loader.register({
         name: "test.clear2",
-        factory: () => schemaFactories.reponses.database()
+        resolver: () => schemaFactories.database.create()
       });
 
       await firstValueFrom(loader.load("test.clear1"));
@@ -185,7 +184,7 @@ describe("LazySchemaLoader", () => {
     it("should return cache statistics", async () => {
       const config = {
         name: "test.stats",
-        factory: () => schemaFactories.reponses.page()
+        factory: () => schemaFactories.page.create()
       };
 
       loader.register(config);
@@ -206,7 +205,7 @@ describe("LazySchemaLoader", () => {
 describe("schemaFactories", () => {
   describe("page", () => {
     it("should create a valid page schema", () => {
-      const schema = schemaFactories.reponses.page();
+      const schema = schemaFactories.page.create();
       expect(schema).toBeDefined();
 
       const validPage = {
@@ -237,7 +236,7 @@ describe("schemaFactories", () => {
     });
 
     it("should validate page with optional icon", () => {
-      const schema = schemaFactories.reponses.page();
+      const schema = schemaFactories.page.create();
 
       const pageWithIcon = {
         object: "page",
@@ -273,7 +272,7 @@ describe("schemaFactories", () => {
 
   describe("databaseObjectResponse", () => {
     it("should create a valid database schema", () => {
-      const schema = schemaFactories.reponses.database();
+      const schema = schemaFactories.database.create();
 
       const validDatabase = {
         object: "database",
@@ -308,7 +307,7 @@ describe("schemaFactories", () => {
 
   describe("blockObjectResponse", () => {
     it("should create a valid block schema", () => {
-      const schema = schemaFactories.reponses.block();
+      const schema = schemaFactories.block.create();
 
       const validBlock = {
         object: "block",
@@ -340,7 +339,7 @@ describe("schemaFactories", () => {
 
   describe("userObjectResponse", () => {
     it("should validate person user", () => {
-      const schema = schemaFactories.reponses.user();
+      const schema = schemaFactories.user.create();
 
       const personUser = {
         object: "user",
@@ -358,7 +357,7 @@ describe("schemaFactories", () => {
     });
 
     it("should validate bot user", () => {
-      const schema = schemaFactories.reponses.user();
+      const schema = schemaFactories.user.create();
 
       const botUser = {
         object: "user",
@@ -380,7 +379,7 @@ describe("schemaFactories", () => {
 
   describe("list response schemas", () => {
     it("should validate query database response", () => {
-      const schema = schemaFactories.queryDatabaseResponse();
+      const schema = schemaFactories.database.query();
 
       const response = {
         object: "list",
@@ -395,7 +394,7 @@ describe("schemaFactories", () => {
     });
 
     it("should validate list databases response", () => {
-      const schema = schemaFactories.listDatabasesResponse();
+      const schema = schemaFactories.database.list();
 
       const response = {
         object: "list",
@@ -410,7 +409,7 @@ describe("schemaFactories", () => {
     });
 
     it("should validate list users response", () => {
-      const schema = schemaFactories.listUsersResponse();
+      const schema = schemaFactories.user.list();
 
       const response = {
         object: "list",
