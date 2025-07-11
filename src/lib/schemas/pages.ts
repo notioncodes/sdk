@@ -1,6 +1,6 @@
 import { ArkErrors, type } from "arktype";
 import { arkToNever, type InferredType } from "../util/types";
-import { BlockId, DatabaseId, PageId } from "./brands";
+import type { BlockId, DatabaseId, PageId } from "./brands";
 import { coverSchema, iconSchema, pageIdSchema, parentSchema, userSchema } from "./schemas";
 
 /**

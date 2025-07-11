@@ -1,30 +1,21 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "ts-node": {
-    "compilerOptions": {
-      "module": "NodeNext"
-    }
-  },
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "./dist",
-    "module": "ESNext",
-    "target": "ES2022",
+    "module": "esnext",
     "moduleResolution": "bundler",
-    "noEmit": true,
+    "target": "es2022",
+    "verbatimModuleSyntax": true,
+    "sourceMap": true,
     "strict": true,
-    "strictNullChecks": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "lib": ["ES2022", "DOM"],
-    "paths": {
-      "$lib/*": ["./src/lib/*"],
-      "$util/*": ["./src/lib/util/*"]
-    }
+    "isolatedModules": true,
+    "noImplicitAny": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true
   },
-  "include": ["./src/**/*", "scripts/**/*", "tmp/generator"],
-  "exclude": ["**/*.test.ts", "node_modules"]
+  "include": ["./src/**/*"],
+  "exclude": ["**/*.test.ts"]
 }

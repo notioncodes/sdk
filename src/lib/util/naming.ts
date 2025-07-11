@@ -83,7 +83,9 @@ export function toSnakeCase(str: string): string {
  * Convert string to kebab-case.
  */
 export function toKebabCase(str: string): string {
-  return str.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+  return str
+    .replace(/_/g, "-") // Convert underscores to hyphens
+    .replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`); // Convert camelCase to kebab-case
 }
 
 /**

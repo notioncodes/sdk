@@ -1,5 +1,5 @@
 import { scope, type } from "arktype";
-import { BlockId, CommentId, DatabaseId, PageId, UserId, WorkspaceId } from "./brands";
+import type { BlockId, CommentId, DatabaseId, PageId, UserId, WorkspaceId } from "./brands";
 
 /**
  * Schema for PageId validation.

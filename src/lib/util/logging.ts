@@ -25,26 +25,26 @@ export namespace log {
     if (!match) return null;
 
     const [, functionName, filePath, lineStr, columnStr] = match;
-    const lineNumber = parseInt(lineStr, 10);
-    const columnNumber = parseInt(columnStr, 10);
+    const lineNumber = lineStr ? parseInt(lineStr, 10) : null;
+    const columnNumber = columnStr ? parseInt(columnStr, 10) : null;
 
     // Extract relative path from the full file path
-    const scriptPath = filePath.includes("notion-sync/")
+    const scriptPath = filePath?.includes("notion-sync/")
       ? filePath.split("notion-sync/")[1]
-      : filePath.replace("file://", "");
+      : filePath?.replace("file://", "");
 
     return {
       function: functionName?.trim() || null,
-      script: scriptPath,
+      script: scriptPath || null,
       line: lineNumber,
       column: columnNumber,
       str: () => {
-        if (scriptPath.split("/").slice(3).join("/")) {
-          return `${gray(scriptPath.split("/").slice(3).join("/"))}${black(":" + lineNumber)}:${magenta(
+        if (scriptPath?.split("/").slice(3).join("/")) {
+          return `${gray(scriptPath?.split("/").slice(3).join("/"))}${black(":" + lineNumber)}:${magenta(
             functionName?.trim() || "0"
           )}`;
         }
-        return `${gray(scriptPath.split("/").slice(2).join("/"))}${black(":" + lineNumber)}:${magenta(
+        return `${gray(scriptPath?.split("/").slice(2).join("/"))}${black(":" + lineNumber)}:${magenta(
           functionName?.replace("async", "").trim() || "0"
         )}`;
       }
