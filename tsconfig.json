@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "module": "es2022",
+    "target": "ES2022",
+    "moduleResolution": "node",
+    "noEmit": false,
+    "strict": true,
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "$lib/*": ["./src/lib/*"],
+      "$util/*": ["./src/lib/util/*"]
+    }
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["**/*.test.ts"]
+}
