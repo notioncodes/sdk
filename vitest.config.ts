@@ -1,5 +1,5 @@
 import tsconfigPaths from "vite-tsconfig-paths";
-import { defineConfig } from "vitest/config.js";
+import { defineConfig } from "vitest/config";
 
 const testInclude = ["./src/**/*.test.ts"];
 const coverageInclude = ["./src/**/*.ts"];
