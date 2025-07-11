@@ -1,9 +1,8 @@
-import type { Context } from "$clients/builder/builder";
-import { ArkErrors, type, Type } from "arktype";
+import { ArkErrors, Type, type } from "arktype";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { tap } from "rxjs/operators";
-import { SchemaRegistry } from "../api/schema-registry";
-import type { SchemaRegistryType } from "../api/types";
+import type { SchemaRegistryType } from "../clients/builder/builder";
+import type { Context } from "../clients/builder/context";
 import { log } from "../util/logging";
 import { parentSchema, userSchema } from "./schemas";
 import { blockSchema, createPaginatedResponseSchema, databaseSchema, pageSchema } from "./types";
@@ -60,7 +59,7 @@ interface SchemaLoadingState {
 }
 
 /**
- * Lazy schema loader implementation for Notion API schemas.
+ * Schema loader implementation for Notion API schemas.
  *
  * This class is responsible for loading schemas on demand and caching them.
  * Used for loading schemas that are not needed immediately and for loading
@@ -68,7 +67,7 @@ interface SchemaLoadingState {
  *
  * @example
  * ```typescript
- * const loader = new LazySchemaLoader();
+ * const loader = new SchemaLoader();
  * loader.register({
  *   name: "notion.page",
  *   factory: notionSchemaFactories.pageObjectResponse,
@@ -77,7 +76,7 @@ interface SchemaLoadingState {
  * const pageSchema$ = loader.load("notion.page");
  * ```
  */
-export class LazySchemaLoader {
+export class SchemaLoader {
   private readonly registry: SchemaRegistryType;
   private configs = new Map<string, LazySchemaConfig>();
   private cache = new Map<string, Observable<Type<unknown>>>();
@@ -93,8 +92,8 @@ export class LazySchemaLoader {
     }
   });
 
-  constructor(registry?: SchemaRegistryType) {
-    this.registry = registry ?? new SchemaRegistry();
+  constructor(registry: SchemaRegistryType) {
+    this.registry = registry;
   }
 
   /**
@@ -141,6 +140,7 @@ export class LazySchemaLoader {
     }
 
     const config = this.configs.get(name);
+
     if (!config) {
       return of(type("unknown") as unknown as Type<T>).pipe(
         tap(() => {
@@ -154,7 +154,7 @@ export class LazySchemaLoader {
 
     this.updateStats({ cacheMisses: this.state.stats.cacheMisses + 1 });
 
-    this.cache.set(name, config.resolver());
+    this.cache.set(name, config.resolver(this.context));
 
     return config.resolver();
   }
@@ -278,8 +278,8 @@ export class LazySchemaLoader {
   }
 }
 
-export const createNotionSchemaLoader = (registry?: SchemaRegistryType): LazySchemaLoader => {
-  const loader = new LazySchemaLoader(registry);
+export const createNotionSchemaLoader = (registry?: SchemaRegistryType): SchemaLoader => {
+  const loader = new SchemaLoader(registry);
 
   loader.register({
     name: "notion.page",

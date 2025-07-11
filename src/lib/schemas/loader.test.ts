@@ -5,13 +5,13 @@
 import { ArkErrors } from "arktype";
 import { firstValueFrom } from "rxjs";
 import { beforeEach, describe, expect, it } from "vitest";
-import { createNotionSchemaLoader, LazySchemaLoader, schemaFactories } from "./lazy-schema-loader";
+import { createNotionSchemaLoader, schemaFactories, SchemaLoader } from "./loader";
 
 describe("LazySchemaLoader", () => {
-  let loader: LazySchemaLoader;
+  let loader: SchemaLoader;
 
   beforeEach(() => {
-    loader = new LazySchemaLoader();
+    loader = new SchemaLoader();
   });
 
   describe("registerLazySchema", () => {

@@ -1,18 +1,22 @@
-/**
- * Reactive query builder implementation using RxJS observables.
- *
- * This single builder provides:
- * - Reactive queries with full RxJS composition
- * - Type-safe queries with full TypeScript inference
- * - Schema validation when available
- * - Raw query escape hatch for complex scenarios
- * - Streaming by default with backpressure handling
- */
-
 import { type, Type } from "arktype";
 import { BehaviorSubject, concat, defer, EMPTY, from, Observable, of, throwError } from "rxjs";
 import { concatMap, map, reduce, retry, share, switchMap, tap } from "rxjs/operators";
-import type { QueryOperator, SchemaRegistryType, StreamOptions } from "../../api/types";
+import type { ReadContext } from "./context";
+import type { QueryOperator } from "./query";
+
+export interface SchemaRegistryType {
+  register<T>(name: string, schema: Type<T>): void;
+  get<T>(name: string): Type<T> | undefined;
+  validate<T>(name: string, value: unknown): T;
+  list(): string[];
+}
+
+export interface StreamOptions {
+  bufferSize?: number;
+  throttleMs?: number;
+  retryCount?: number;
+  retryDelay?: number;
+}
 
 /**
  * Query condition for filtering.
@@ -30,24 +34,6 @@ export interface SortSpec<T> {
   field: keyof T;
   direction: "asc" | "desc";
 }
-
-/**
- * Query execution context.
- */
-export interface ReadContext<T> {
-  conditions: QueryCondition<T>[];
-  sorts: SortSpec<T>[];
-  limitValue?: number;
-  offsetValue?: number;
-  includes: string[];
-  selectedFields?: (keyof T)[];
-}
-
-export interface WriteContext<T> {
-  schema: Type<T>;
-}
-
-export type Context<T> = ReadContext<T> | WriteContext<T>;
 
 /**
  * Raw query configuration for escape hatch scenarios.
@@ -532,4 +518,3 @@ export const QueryUtils = {
 };
 
 // Export types for external use
-export type { BatchConfig, QueryCondition, ReadContext as QueryContext, RawQueryConfig, SortSpec };

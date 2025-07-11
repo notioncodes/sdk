@@ -63,37 +63,20 @@ export type ListResponse = typeof listResponseSchema.infer;
 /**
  * Enhanced paginated response schema that extends base API response.
  */
-export const createPaginatedResponseSchema = <T>(itemSchema: Type<T>) =>
+export const createPaginatedResponseSchema = <T>(resultSchema: Type<T>) =>
   type({
-    data: itemSchema.array(),
+    request_id: "string",
+    next_cursor: "string | null",
     has_more: "boolean",
-    "next_cursor?": "string",
-    "metadata?": apiResponseMetadataSchema,
-    "errors?": apiErrorSchema.array()
+    metadata: apiResponseMetadataSchema,
+    errors: apiErrorSchema.array().optional(),
+    results: resultSchema.array()
   });
 
 /**
  * Valid list response types based on Notion API specification.
  */
 export type ListType = "page_or_database" | "database" | "page" | "block" | "user" | "comment" | "search_result";
-
-/**
- * Command layer factory for creating typed list response schemas.
- *
- * @param results - The arktype schema for individual result items
- * @param listType - The string identifier for the list type (must be a valid Notion API list type)
- * @returns A composed arktype schema for the complete list response
- */
-// export function createPaginatedResponseSchema<T>(results: Type<T>, listType: ListType): Type<ListResponse> {
-//   return type({
-//     object: '"list"',
-//     type: type.enumerated(listType),
-//     results: results.array(),
-//     next_cursor: "string | null",
-//     has_more: "boolean",
-//     "request_id?": "string"
-//   });
-// }
 
 /**
  * Command layer factory for creating search response schemas.

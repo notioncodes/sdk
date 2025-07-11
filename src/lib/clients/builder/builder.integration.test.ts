@@ -1,5 +1,5 @@
 import { describe, it } from "vitest";
-import { createNotionSchemaLoader } from "../../schemas/lazy-schema-loader";
+import { createNotionSchemaLoader } from "../../schemas/loader";
 import { log } from "../../util/logging";
 
 describe("e2e-clients", () => {

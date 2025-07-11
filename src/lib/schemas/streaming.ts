@@ -26,7 +26,7 @@ import {
   tap,
   withLatestFrom
 } from "rxjs/operators";
-import type { PaginatedResponse, StreamOptions } from "../api/types";
+import type { StreamOptions } from "stream";
 
 /**
  * Stream processor for handling data transformations.
@@ -42,29 +42,29 @@ export interface PaginationStreamOptions extends StreamOptions {
   pageSize?: number;
   maxPages?: number;
   delayBetweenPages?: number;
+  retryCount?: number;
+  retryDelay?: number;
 }
 
 /**
  * Create a paginated stream from an API endpoint.
  */
 export function createPaginatedStream<T>(
-  fetcher: (cursor?: string) => Promise<PaginatedResponse<T>>,
-  options: PaginationStreamOptions = {}
+  fetcher: (cursor?: string) => Observable<PaginatedResponse<T>>,
+  options: PaginationStreamOptions
 ): Observable<T> {
-  const { pageSize = 100, maxPages = Infinity, delayBetweenPages = 0, retryCount = 3, retryDelay = 1000 } = options;
-
   let pageCount = 0;
 
   return of(undefined).pipe(
     expand((cursor) => {
-      if (pageCount >= maxPages) {
+      if (!options.maxPages || pageCount >= options.maxPages) {
         return EMPTY;
       }
 
       return from(fetcher(cursor)).pipe(
         tap(() => pageCount++),
         map((response) => (response.hasMore ? response.nextCursor : undefined)),
-        delay(delayBetweenPages)
+        delay(options.delayBetweenPages ?? 0)
       );
     }),
     concatMap((cursor, index) => {
@@ -75,7 +75,7 @@ export function createPaginatedStream<T>(
         concatMap((items) => from(items))
       );
     }),
-    retry({ count: retryCount, delay: retryDelay })
+    retry({ count: options.retryCount ?? 3, delay: options.retryDelay ?? 1000 })
   );
 }
 
