@@ -1,6 +1,6 @@
 import { type, Type } from "arktype";
-import { BehaviorSubject, concat, defer, EMPTY, from, Observable, of, throwError } from "rxjs";
-import { concatMap, map, reduce, retry, share, switchMap, tap } from "rxjs/operators";
+import { BehaviorSubject, from, Observable, of, throwError } from "rxjs";
+import { concatMap, map, reduce, share, switchMap } from "rxjs/operators";
 import type { Context } from "./context";
 import type { QueryOperator } from "./query";
 
@@ -196,68 +196,6 @@ export class QueryBuilder<T> {
       rawQuery: { query, params, skipValidation }
     });
     return this;
-  }
-
-  stream(options?: StreamOptions): Observable<T> {
-    const config: BatchConfig = {
-      bufferSize: options?.bufferSize || 100,
-      throttleMs: options?.throttleMs || 0,
-      retryCount: options?.retryCount || 3,
-      retryDelay: options?.retryDelay || 1000
-    };
-
-    return defer(() => {
-      let offset = 0;
-      let hasMore = true;
-
-      const fetchBatch = (): Observable<T[]> => {
-        if (!hasMore) return EMPTY;
-
-        if (this.context.value.rawQuery) {
-          if (!this.rawExecutor) {
-            return throwError(() => new Error("Raw query executor not provided"));
-          }
-          return this.rawExecutor(this.context.value.rawQuery);
-        }
-
-        const batchContext = {
-          ...this.context.value,
-          limitValue: config.bufferSize,
-          offsetValue: offset
-        };
-
-        return this.executor(batchContext).pipe(
-          tap((results) => {
-            offset += results.length;
-            hasMore = results.length === config.bufferSize;
-          })
-        );
-      };
-
-      const streamBatches = (): Observable<T> => {
-        return fetchBatch().pipe(
-          switchMap((results) => {
-            if (results.length === 0) {
-              return EMPTY;
-            }
-
-            const validated$ =
-              this.schema && !this.context.value.rawQuery?.skipValidation
-                ? from(results).pipe(concatMap((result) => validateWithSchema(this.schema!, result)))
-                : from(results);
-
-            return hasMore
-              ? concat(
-                  validated$,
-                  defer(() => streamBatches())
-                )
-              : validated$;
-          })
-        );
-      };
-
-      return streamBatches();
-    }).pipe(retry({ count: config.retryCount, delay: config.retryDelay }), share());
   }
 
   execute(): Observable<T[]> {

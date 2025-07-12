@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 import { beforeEach, describe, expect, it } from "vitest";
 import { DatabaseRecordBuilder } from "../schemas/builder";
-import { cons } from "../util/console";
+import { display } from "../util/display";
 import { log } from "../util/logging";
 import { SearchOperator } from "./search-operators";
 
@@ -24,7 +24,7 @@ describe("Search Operators", () => {
         return;
       }
 
-      const monitor = cons();
+      const monitor = display();
       let startTime = Date.now();
 
       const builder = new DatabaseRecordBuilder();
@@ -177,7 +177,7 @@ describe("Search Operators", () => {
         return;
       }
 
-      const monitor = cons();
+      const monitor = display();
       let startTime = Date.now();
 
       const { stream, progress, metrics } = operator.executeWithStreaming(

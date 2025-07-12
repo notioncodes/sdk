@@ -17,16 +17,10 @@ import type { SearchBody } from "../schemas/types/search";
 import { log } from "../util/logging";
 import { Operator, type MetricsInfo, type OperatorConfig, type ProgressInfo } from "./operator";
 
-/**
- * Response type for search results.
- */
 export interface SearchResponse extends ListResponse {
   results: PageOrDatabase[];
 }
 
-/**
- * Enhanced execute result with streaming capabilities.
- */
 export interface SearchStreamResult {
   stream: Observable<SearchResponse>;
   progress: Observable<ProgressInfo>;
@@ -43,9 +37,6 @@ export interface ProgressConfig {
   estimateTotal?: boolean;
 }
 
-/**
- * Metrics tracking configuration.
- */
 export interface MetricsConfig {
   enabled: boolean;
   interval: number;
@@ -53,14 +44,8 @@ export interface MetricsConfig {
   includeErrorRates?: boolean;
 }
 
-/**
- * Composable operator function type.
- */
 export type ComposableOperator<T, R> = (source: Observable<T>) => Observable<R>;
 
-/**
- * Enhanced configuration for search operations.
- */
 export interface SearchConfig {
   baseUrl: string;
   headers: Record<string, string>;
@@ -105,10 +90,10 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
 
   /**
    * Execute the operator with the given request and configuration.
-   * This method satisfies the base class contract.
    *
-   * @param request - The search request payload
-   * @param config - The operator configuration
+   * @param request - The search request payload.
+   * @param config - The operator configuration.
+   *
    * @returns Observable of search responses
    */
   execute(request: SearchBody, config: OperatorConfig): Observable<SearchResponse> {
@@ -120,9 +105,10 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
   /**
    * Enhanced execute method with streaming pagination support.
    *
-   * @param request - The search request payload
-   * @param config - The operator configuration with optional progress/metrics settings
-   * @returns Object containing stream, progress, and metrics observables
+   * @param request - The search request payload.
+   * @param config - The operator configuration with optional progress/metrics settings.
+   *
+   * @returns Object containing stream, progress, and metrics observables.
    */
   executeWithStreaming(request: SearchBody, config: SearchConfig): SearchStreamResult {
     const cancelSubject = new Subject<void>();
@@ -208,14 +194,11 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
                   const errorMsg = `search failed: ${response.status} ${response.statusText} - ${errorText}`;
                   metricsState.errorCount++;
                   metricsSubject.next(this.calculateMetrics(metricsState));
-
                   log.error("http error", errorMsg);
-
                   throw new Error(errorMsg);
                 })
               );
             }
-
             return from(response.json()).pipe(
               tap((json) => {
                 log.debug("http response json", {
@@ -226,28 +209,20 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
                 });
               }),
               map((json) => {
-                const duration = Date.now() - startTime;
-                metricsState.totalDuration += duration;
+                metricsState.totalDuration += Date.now() - startTime;
                 metricsState.successCount += json.results?.length || 0;
-
-                totalResults += json.results?.length || 0;
-
                 if (config.progress?.enabled) {
                   const progressInfo: ProgressInfo = {
                     current: page,
                     total: json.has_more ? undefined : page,
                     percentage: json.has_more ? undefined : 100,
-                    message: `fetched ${totalResults} results across ${page} pages`,
+                    message: `fetched ${json.results?.length || 0} results across ${page} pages`,
                     stage: json.has_more ? "fetching" : "complete"
                   };
                   progressSubject.next(progressInfo);
                 }
-
-                if (config.metrics?.enabled) {
-                  metricsSubject.next(this.calculateMetrics(metricsState));
-                }
-
-                return json as SearchResponse;
+                metricsSubject.next(this.calculateMetrics(metricsState));
+                return json;
               })
             );
           }),
@@ -292,15 +267,10 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
                 stage: "complete"
               });
             }
-
-            if (config.metrics?.enabled) {
-              metricsSubject.next(this.calculateMetrics(metricsState));
-            }
-
+            metricsSubject.next(this.calculateMetrics(metricsState));
             subscriber.complete();
           }
         });
-
       return () => {
         subscription.unsubscribe();
       };
@@ -358,18 +328,6 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
       successCount: metricsState.successCount,
       throughput,
       timestamp: new Date()
-    };
-  }
-
-  /**
-   * Apply composable operators to the stream.
-   *
-   * @param operators - Array of composable operators to apply
-   * @returns A function that can be used to compose the operators
-   */
-  compose<T>(...operators: ComposableOperator<T, T>[]): ComposableOperator<T, T> {
-    return (source: Observable<T>) => {
-      return operators.reduce((acc, op) => op(acc), source);
     };
   }
 }
@@ -442,71 +400,3 @@ export const searchComposables = {
       );
   }
 };
-
-/**
- * Factory function for creating search operators with default progress/metrics configuration.
- */
-export function createSearchOperator(config?: {
-  enableProgress?: boolean;
-  enableMetrics?: boolean;
-  progressInterval?: number;
-  metricsInterval?: number;
-}): SearchOperator {
-  const operator = new SearchOperator();
-
-  // Set default configuration on the instance
-  (operator as any).defaultConfig = {
-    progress: {
-      enabled: config?.enableProgress ?? true,
-      interval: config?.progressInterval ?? 1000
-    },
-    metrics: {
-      enabled: config?.enableMetrics ?? true,
-      interval: config?.metricsInterval ?? 5000
-    }
-  };
-
-  return operator;
-}
-
-/**
- * Higher-order function for adding progress tracking to any operator.
- */
-export function withProgress<T extends SearchOperator>(operator: T, config?: ProgressConfig): T {
-  const originalExecute = operator.execute.bind(operator);
-
-  operator.execute = (request: SearchBody, operatorConfig: SearchConfig) => {
-    const enhancedConfig = {
-      ...operatorConfig,
-      progress: {
-        enabled: true,
-        interval: 1000,
-        ...config
-      }
-    };
-    return originalExecute(request, enhancedConfig);
-  };
-
-  return operator;
-}
-
-/**
- * Higher-order function for adding metrics tracking to any operator.
- */
-export function withMetrics<T extends SearchOperator>(operator: T, config?: MetricsConfig): T {
-  const originalExecute = operator.execute.bind(operator);
-
-  operator.execute = (request: SearchBody, operatorConfig: SearchConfig) => {
-    const enhancedConfig = {
-      ...operatorConfig,
-      metrics: {
-        enabled: true,
-        interval: 5000,
-        ...config
-      }
-    };
-    return originalExecute(request, enhancedConfig);
-  };
-
-  return operator;
-}

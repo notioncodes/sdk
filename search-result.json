@@ -1,9 +1,184 @@
 [
   {
     "object": "page",
-    "id": "16ad7342-e571-8091-8fe1-ecb4110b4e2c",
-    "created_time": "2024-12-28T17:26:00.000Z",
-    "last_edited_time": "2024-12-28T19:28:00.000Z",
+    "id": "22bd7342-e571-815b-ad00-fa5bc891f3c6",
+    "created_time": "2025-07-09T22:54:00.000Z",
+    "last_edited_time": "2025-07-09T22:54:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "16ad872b-594c-8163-8a5b-0027470f571a"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "00000000-0000-0000-0000-000000000003"
+    },
+    "cover": null,
+    "icon": {
+      "type": "external",
+      "external": {
+        "url": "https://www.promptingguide.ai/144-favicon.svg"
+      }
+    },
+    "parent": {
+      "type": "database_id",
+      "database_id": "203d7342-e571-80cd-b09c-d3b2495d0f91"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "Date": {
+        "id": "%3DbxG",
+        "type": "date",
+        "date": {
+          "start": "2025-07-09",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "MMjd",
+        "type": "select",
+        "select": {
+          "id": "4b94e60d-e11d-434c-ab48-024f2858e475",
+          "name": "Draft",
+          "color": "default"
+        }
+      },
+      "Last Updated": {
+        "id": "NGfb",
+        "type": "last_edited_time",
+        "last_edited_time": "2025-07-09T22:54:00.000Z"
+      },
+      "URL": {
+        "id": "ssiU",
+        "type": "url",
+        "url": "https://www.promptingguide.ai/tools"
+      },
+      "Ideas": {
+        "id": "wYBP",
+        "type": "relation",
+        "relation": [],
+        "has_more": false
+      },
+      "Name": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Tools & Libraries | Prompt Engineering Guide",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Tools & Libraries | Prompt Engineering Guide",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/Tools-Libraries-Prompt-Engineering-Guide-22bd7342e571815bad00fa5bc891f3c6",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "22bd7342-e571-8132-9797-c2a31d32b2cb",
+    "created_time": "2025-07-09T22:30:00.000Z",
+    "last_edited_time": "2025-07-09T22:30:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "16ad872b-594c-8163-8a5b-0027470f571a"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "00000000-0000-0000-0000-000000000003"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "database_id",
+      "database_id": "203d7342-e571-80cd-b09c-d3b2495d0f91"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "Date": {
+        "id": "%3DbxG",
+        "type": "date",
+        "date": {
+          "start": "2025-07-09",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "MMjd",
+        "type": "select",
+        "select": {
+          "id": "4b94e60d-e11d-434c-ab48-024f2858e475",
+          "name": "Draft",
+          "color": "default"
+        }
+      },
+      "Last Updated": {
+        "id": "NGfb",
+        "type": "last_edited_time",
+        "last_edited_time": "2025-07-09T22:30:00.000Z"
+      },
+      "URL": {
+        "id": "ssiU",
+        "type": "url",
+        "url": "https://pieces.app/blog/vs-code-snippets-guide"
+      },
+      "Ideas": {
+        "id": "wYBP",
+        "type": "relation",
+        "relation": [
+          {
+            "id": "229d7342-e571-81a2-83f6-f6907f257966"
+          }
+        ],
+        "has_more": false
+      },
+      "Name": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "The ultimate guide to VS Code snippets (all ways gathered)",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "The ultimate guide to VS Code snippets (all ways gathered)",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/The-ultimate-guide-to-VS-Code-snippets-all-ways-gathered-22bd7342e57181329797c2a31d32b2cb",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "22bd7342-e571-8022-9efd-c9e20febcb71",
+    "created_time": "2025-07-09T22:22:00.000Z",
+    "last_edited_time": "2025-07-09T22:22:00.000Z",
     "created_by": {
       "object": "user",
       "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
@@ -16,102 +191,154 @@
     "icon": null,
     "parent": {
       "type": "database_id",
-      "database_id": "16ad7342-e571-80c4-a065-c7a1015871d3"
+      "database_id": "208d7342-e571-801d-b0ad-da982ff524c6"
     },
     "archived": false,
     "in_trash": false,
     "properties": {
-      "relation": {
-        "id": "%3DIr%5C",
-        "type": "relation",
-        "relation": [],
-        "has_more": false
+      "Tags": {
+        "id": "XELS",
+        "type": "multi_select",
+        "multi_select": []
       },
-      "Created Date": {
-        "id": "%3DloG",
+      "Name": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": " “understanding” can’t be downloaded, it has to be constructed.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": " “understanding” can’t be downloaded, it has to be constructed.",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/understanding-can-t-be-downloaded-it-has-to-be-constructed-22bd7342e57180229efdc9e20febcb71",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "1e1d7342-e571-801e-953c-d0bc162fea65",
+    "created_time": "2025-04-26T23:56:00.000Z",
+    "last_edited_time": "2025-07-09T22:22:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
+    },
+    "cover": null,
+    "icon": {
+      "type": "external",
+      "external": {
+        "url": "https://www.notion.so/icons/briefcase_lightgray.svg"
+      }
+    },
+    "parent": {
+      "type": "workspace",
+      "workspace": true
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "title": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Scope",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Scope",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/Scope-1e1d7342e571801e953cd0bc162fea65",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "22bd7342-e571-813c-b53e-f9f71b674153",
+    "created_time": "2025-07-09T22:03:00.000Z",
+    "last_edited_time": "2025-07-09T22:03:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "16ad872b-594c-8163-8a5b-0027470f571a"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "00000000-0000-0000-0000-000000000003"
+    },
+    "cover": null,
+    "icon": {
+      "type": "external",
+      "external": {
+        "url": "https://www.promptscape.dev/img/favicon.ico"
+      }
+    },
+    "parent": {
+      "type": "database_id",
+      "database_id": "203d7342-e571-80cd-b09c-d3b2495d0f91"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "Date": {
+        "id": "%3DbxG",
         "type": "date",
-        "date": null
-      },
-      "Series": {
-        "id": "%3FxsZ",
-        "type": "relation",
-        "relation": [],
-        "has_more": false
-      },
-      "Section": {
-        "id": "%40ofb",
-        "type": "select",
-        "select": null
+        "date": {
+          "start": "2025-07-09",
+          "end": null,
+          "time_zone": null
+        }
       },
       "Status": {
-        "id": "BXDw",
-        "type": "status",
-        "status": {
-          "id": "e1c763c3-a491-42af-b808-4b1c34b8f578",
-          "name": "Not started",
+        "id": "MMjd",
+        "type": "select",
+        "select": {
+          "id": "4b94e60d-e11d-434c-ab48-024f2858e475",
+          "name": "Draft",
           "color": "default"
         }
       },
-      "Weight": {
-        "id": "MF%3FD",
-        "type": "number",
-        "number": null
-      },
-      "Publish Date": {
-        "id": "S%3Bkc",
-        "type": "date",
-        "date": null
+      "Last Updated": {
+        "id": "NGfb",
+        "type": "last_edited_time",
+        "last_edited_time": "2025-07-09T22:03:00.000Z"
       },
       "URL": {
-        "id": "ZyoT",
+        "id": "ssiU",
         "type": "url",
-        "url": null
+        "url": "https://www.promptscape.dev/"
       },
-      "URL Database Links": {
-        "id": "Z%7B%7D%3E",
-        "type": "relation",
-        "relation": [],
-        "has_more": false
-      },
-      "Type": {
-        "id": "bJ%5Da",
-        "type": "select",
-        "select": null
-      },
-      "Cover": {
-        "id": "bKp%5C",
-        "type": "files",
-        "files": []
-      },
-      "Tags": {
-        "id": "krBQ",
-        "type": "multi_select",
-        "multi_select": [
-          {
-            "id": "A\\uJ",
-            "name": "chat",
-            "color": "pink"
-          },
-          {
-            "id": "={yj",
-            "name": "ai",
-            "color": "yellow"
-          }
-        ]
-      },
-      "Excerpt": {
-        "id": "mAKh",
-        "type": "rich_text",
-        "rich_text": []
-      },
-      "Glossary Links": {
-        "id": "otq%3D",
-        "type": "relation",
-        "relation": [],
-        "has_more": false
-      },
-      "Snippet Package": {
-        "id": "wfNq",
+      "Ideas": {
+        "id": "wYBP",
         "type": "relation",
         "relation": [],
         "has_more": false
@@ -123,7 +350,7 @@
           {
             "type": "text",
             "text": {
-              "content": "MaxAI.me",
+              "content": "Promptscape | Promptscape",
               "link": null
             },
             "annotations": {
@@ -134,13 +361,297 @@
               "code": false,
               "color": "default"
             },
-            "plain_text": "MaxAI.me",
+            "plain_text": "Promptscape | Promptscape",
             "href": null
           }
         ]
       }
     },
-    "url": "https://www.notion.so/MaxAI-me-16ad7342e57180918fe1ecb4110b4e2c",
-    "public_url": "https://scalloped-clover-852.notion.site/MaxAI-me-16ad7342e57180918fe1ecb4110b4e2c"
+    "url": "https://www.notion.so/Promptscape-Promptscape-22bd7342e571813cb53ef9f71b674153",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "22bd7342-e571-8134-acd5-fa5851e9dc58",
+    "created_time": "2025-07-09T21:57:00.000Z",
+    "last_edited_time": "2025-07-09T21:57:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "16ad872b-594c-8163-8a5b-0027470f571a"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "00000000-0000-0000-0000-000000000003"
+    },
+    "cover": null,
+    "icon": {
+      "type": "external",
+      "external": {
+        "url": "https://marketplace.visualstudio.com/favicon.ico"
+      }
+    },
+    "parent": {
+      "type": "database_id",
+      "database_id": "203d7342-e571-80cd-b09c-d3b2495d0f91"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "Date": {
+        "id": "%3DbxG",
+        "type": "date",
+        "date": {
+          "start": "2025-07-09",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Status": {
+        "id": "MMjd",
+        "type": "select",
+        "select": {
+          "id": "4b94e60d-e11d-434c-ab48-024f2858e475",
+          "name": "Draft",
+          "color": "default"
+        }
+      },
+      "Last Updated": {
+        "id": "NGfb",
+        "type": "last_edited_time",
+        "last_edited_time": "2025-07-09T21:57:00.000Z"
+      },
+      "URL": {
+        "id": "ssiU",
+        "type": "url",
+        "url": "https://marketplace.visualstudio.com/search?term=tag%3Aprompt&target=VSCode&category=All%20categories&sortBy=Relevance"
+      },
+      "Ideas": {
+        "id": "wYBP",
+        "type": "relation",
+        "relation": [],
+        "has_more": false
+      },
+      "Name": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Search results - tag:prompt | Visual Studio Code , Visual Studio Marketplace",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Search results - tag:prompt | Visual Studio Code , Visual Studio Marketplace",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/Search-results-tag-prompt-Visual-Studio-Code-Visual-Studio-Marketplace-22bd7342e5718134acd5fa5851e9dc58",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "22bd7342-e571-8068-b3c2-f9e078b1cc07",
+    "created_time": "2025-07-09T17:33:00.000Z",
+    "last_edited_time": "2025-07-09T20:08:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "page_id",
+      "page_id": "22bd7342-e571-8000-84c7-c6d150b1b2a8"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "title": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Mistral Small 3.2 24B (free) | Chutes",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Mistral Small 3.2 24B (free) | Chutes",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/Mistral-Small-3-2-24B-free-Chutes-22bd7342e5718068b3c2f9e078b1cc07",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "22bd7342-e571-806c-960c-d104ad6cccfe",
+    "created_time": "2025-07-09T17:34:00.000Z",
+    "last_edited_time": "2025-07-09T18:01:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "page_id",
+      "page_id": "22bd7342-e571-8000-84c7-c6d150b1b2a8"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "title": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Devstral Small (free) | Chutes",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Devstral Small (free) | Chutes",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/Devstral-Small-free-Chutes-22bd7342e571806c960cd104ad6cccfe",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "22bd7342-e571-8016-8911-e959b72d5e0f",
+    "created_time": "2025-07-09T17:33:00.000Z",
+    "last_edited_time": "2025-07-09T17:33:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "page_id",
+      "page_id": "22bd7342-e571-8000-84c7-c6d150b1b2a8"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "title": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Coder Large | Together",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Coder Large | Together",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/Coder-Large-Together-22bd7342e57180168911e959b72d5e0f",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "22bd7342-e571-805e-8cbe-cdd03490a805",
+    "created_time": "2025-07-09T17:33:00.000Z",
+    "last_edited_time": "2025-07-09T17:33:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
+    },
+    "cover": null,
+    "icon": null,
+    "parent": {
+      "type": "page_id",
+      "page_id": "22bd7342-e571-8000-84c7-c6d150b1b2a8"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "title": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "GPT-4.1 | openai",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "GPT-4.1 | openai",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/GPT-4-1-openai-22bd7342e571805e8cbecdd03490a805",
+    "public_url": null
   }
 ]
