@@ -1,17 +1,4 @@
-import {
-  bgBlack,
-  bgCyan,
-  bgGreenBright,
-  black,
-  blueBright,
-  bold,
-  gray,
-  greenBright,
-  magenta,
-  red,
-  white,
-  yellow
-} from "ansis";
+import { bgCyan, bgGreenBright, black, blueBright, bold, gray, greenBright, magenta, red, white, yellow } from "ansis";
 import { inspect as nodeInspect } from "node:util";
 
 export namespace log {
@@ -123,6 +110,18 @@ export namespace log {
     return gray(date);
   };
 
+  const level = (): number => {
+    if (process.env.LOG_LEVEL === "debug") {
+      return 3;
+    } else if (process.env.LOG_LEVEL === "info") {
+      return 2;
+    } else if (process.env.LOG_LEVEL === "error") {
+      return 1;
+    } else {
+      return 0;
+    }
+  };
+
   export namespace debugging {
     /**
      * Inspects and logs debugging information with call site details.
@@ -131,8 +130,10 @@ export namespace log {
      * @param args - Arguments to inspect
      */
     export const inspect = (label: string, args: any) => {
-      console.log(`${d()} 🐛 ${bgGreenBright(white(label))} ${loc()}`);
-      console.log(nodeInspect(args, { depth: 4, colors: true, sorted: true }));
+      if (level() >= 3) {
+        console.log(`${d()} 🐛 ${bgGreenBright(white(label))} ${loc()}`);
+        console.log(nodeInspect(args, { depth: 4, colors: true, sorted: true }));
+      }
     };
   }
 
@@ -143,9 +144,11 @@ export namespace log {
    * @param args - Optional arguments to inspect
    */
   export const info = (message: string, args?: any) => {
-    console.log(`${d()} ℹ️  ${blueBright(message)} ${loc()}`);
-    if (args) {
-      console.log(nodeInspect(args, { depth: null, colors: true, sorted: true }));
+    if (level() >= 2) {
+      console.log(`${d()} ℹ️  ${blueBright(message)} ${loc()}`);
+      if (args) {
+        console.log(nodeInspect(args, { depth: null, colors: true, sorted: true }));
+      }
     }
   };
 
@@ -156,19 +159,10 @@ export namespace log {
    * @param args - Arguments to inspect
    */
   export const debug = (message: string, args?: any) => {
-    console.log(bgCyan(`${d()} 🐛 ${bold(message)} ${loc()}`));
-    console.log(nodeInspect(args, { depth: 4, colors: true, sorted: true }));
-  };
-
-  /**
-   * Logs a trace message with timestamp and location.
-   *
-   * @param message - The message to log
-   * @param args - Arguments to inspect
-   */
-  export const trace = (message: string, args: any) => {
-    console.log(`${d()} 🔍 ${bgBlack(message)} ${loc()}`);
-    console.log(nodeInspect(args, { depth: null, colors: true, sorted: true }));
+    if (level() >= 3) {
+      console.log(bgCyan(`${d()} 🐛 ${bold(message)} ${loc()}`));
+      console.log(nodeInspect(args, { depth: 4, colors: true, sorted: true }));
+    }
   };
 
   /**
@@ -178,9 +172,11 @@ export namespace log {
    * @param args - Optional arguments to inspect
    */
   export const success = (message: string, args?: any) => {
-    console.log(`${d()} ✅ ${greenBright(message)} ${loc()}`);
-    if (args) {
-      console.log(nodeInspect(args, { depth: null, colors: true, sorted: true }));
+    if (level() >= 2) {
+      console.log(`${d()} ✅ ${greenBright(message)} ${loc()}`);
+      if (args) {
+        console.log(nodeInspect(args, { depth: null, colors: true, sorted: true }));
+      }
     }
   };
 
@@ -191,9 +187,11 @@ export namespace log {
    * @param args - Optional arguments to inspect
    */
   export const warning = (message: string, args?: any) => {
-    console.log(`${d()} ⚠️ ${yellow(message)} ${loc()}`);
-    if (args) {
-      console.log(nodeInspect(args, { depth: null, colors: true, sorted: true }));
+    if (level() >= 2) {
+      console.log(`${d()} ⚠️ ${yellow(message)} ${loc()}`);
+      if (args) {
+        console.log(nodeInspect(args, { depth: null, colors: true, sorted: true }));
+      }
     }
   };
 
@@ -204,9 +202,11 @@ export namespace log {
    * @param args - Optional arguments to inspect
    */
   export const error = (message: string, args?: any) => {
-    console.log(`${d()} ❌ ${red(message)} ${loc()}`);
-    if (args) {
-      console.log(nodeInspect(args, { depth: null, colors: true, sorted: true }));
+    if (level() >= 1) {
+      console.log(`${d()} ❌ ${red(message)} ${loc()}`);
+      if (args) {
+        console.log(nodeInspect(args, { depth: null, colors: true, sorted: true }));
+      }
     }
   };
 

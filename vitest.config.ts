@@ -22,6 +22,7 @@ export default defineConfig({
     isolate: true,
     silent: false,
     update: false,
+    // disableConsoleIntercept: false,
     hideSkippedTests: true,
     typecheck: {
       enabled: true
