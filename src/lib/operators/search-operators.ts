@@ -13,9 +13,9 @@ import {
   withLatestFrom
 } from "rxjs/operators";
 import type { ListResponse, PageOrDatabase } from "../schemas/types/reponses";
-import type { SearchBody } from "../schemas/types/search";
+import type { Search } from "../schemas/types/search";
 import { log } from "../util/logging";
-import { Operator, type MetricsInfo, type OperatorConfig, type ProgressInfo } from "./operator";
+import { HTTPConfig, Operator, OperatorConfig, SearchRequest, type MetricsInfo, type ProgressInfo } from "./operator";
 
 export interface SearchResponse extends ListResponse {
   results: PageOrDatabase[];
@@ -28,34 +28,7 @@ export interface SearchStreamResult {
   cancel: () => void;
 }
 
-/**
- * Progress tracking configuration.
- */
-export interface ProgressConfig {
-  enabled: boolean;
-  interval: number;
-  estimateTotal?: boolean;
-}
-
-export interface MetricsConfig {
-  enabled: boolean;
-  interval: number;
-  includeLatency?: boolean;
-  includeErrorRates?: boolean;
-}
-
 export type ComposableOperator<T, R> = (source: Observable<T>) => Observable<R>;
-
-export interface SearchConfig {
-  baseUrl: string;
-  headers: Record<string, string>;
-  requestId?: string;
-  progress?: ProgressConfig;
-  metrics?: MetricsConfig;
-  maxRetries?: number;
-  retryDelay?: number;
-  timeout?: number;
-}
 
 /**
  * Operator for searching across Notion workspace with streaming pagination support.
@@ -85,7 +58,7 @@ export interface SearchConfig {
  * metrics.subscribe(m => console.log(`Throughput: ${m.throughput} req/s`));
  * ```
  */
-export class SearchOperator extends Operator<SearchBody, SearchResponse> {
+export class SearchOperator extends Operator<Search, SearchResponse> {
   protected schemaName = "notion.search";
 
   /**
@@ -96,9 +69,11 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
    *
    * @returns Observable of search responses
    */
-  execute(request: SearchBody, config: OperatorConfig): Observable<SearchResponse> {
-    const searchConfig = config as SearchConfig;
-    const result = this.executeWithStreaming(request, searchConfig);
+  execute(payload: Search, httpConfig: HTTPConfig, config?: OperatorConfig): Observable<SearchResponse> {
+    httpConfig = new HTTPConfig(httpConfig);
+    const operatorConfig = new OperatorConfig(config);
+    const searchConfig = new SearchRequest(httpConfig);
+    const result = this.executeWithStreaming(payload, searchConfig, operatorConfig);
     return result.stream;
   }
 
@@ -110,7 +85,9 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
    *
    * @returns Object containing stream, progress, and metrics observables.
    */
-  executeWithStreaming(request: SearchBody, config: SearchConfig): SearchStreamResult {
+  executeWithStreaming(request: Search, token: string, config?: OperatorConfig): SearchStreamResult {
+    const operatorConfig = new OperatorConfig(config);
+    const searchConfig = new SearchRequest(token);
     const cancelSubject = new Subject<void>();
     const progressSubject = new Subject<ProgressInfo>();
     const metricsSubject = new Subject<MetricsInfo>();
@@ -132,8 +109,8 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
       metricsState
     );
 
-    const progress = this.createProgressStream(progressSubject, config); // setup progress tracking
-    const metrics = this.createMetricsStream(metricsSubject, metricsState, config); // setup metrics tracking
+    const progress = this.createProgressStream(progressSubject, operatorConfig); // setup progress tracking
+    const metrics = this.createMetricsStream(metricsSubject, metricsState, operatorConfig); // setup metrics tracking
 
     return {
       stream: stream.pipe(takeUntil(cancelSubject)),
@@ -150,8 +127,9 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
    * Create a paginated stream that handles cursor-based pagination automatically.
    */
   private createPaginatedStream(
-    initialRequest: SearchBody,
-    config: SearchConfig,
+    initialRequest: Search,
+    searchConfig: SearchRequest,
+    operatorConfig: OperatorConfig,
     cancelSubject: Subject<void>,
     progressSubject: Subject<ProgressInfo>,
     metricsSubject: Subject<MetricsInfo>,
@@ -170,10 +148,10 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
 
         metricsState.requestCount++;
 
-        return fromFetch(`${config.baseUrl}/search`, {
+        return fromFetch(`${searchConfig.baseUrl}/search`, {
           method: "POST",
           headers: {
-            ...config.headers,
+            ...searchConfig.headers,
             "Content-Type": "application/json"
           },
           body: JSON.stringify(requestWithCursor)
@@ -211,7 +189,7 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
               map((json) => {
                 metricsState.totalDuration += Date.now() - startTime;
                 metricsState.successCount += json.results?.length || 0;
-                if (config.progress?.enabled) {
+                if (operatorConfig.progress?.enabled) {
                   const progressInfo: ProgressInfo = {
                     current: page,
                     total: json.has_more ? undefined : page,
@@ -258,7 +236,7 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
             subscriber.error(error);
           },
           complete: () => {
-            if (config.progress?.enabled) {
+            if (operatorConfig.progress?.enabled) {
               progressSubject.next({
                 current: page,
                 total: page,
@@ -280,7 +258,10 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
   /**
    * Create progress tracking stream with configurable intervals.
    */
-  private createProgressStream(progressSubject: Subject<ProgressInfo>, config: SearchConfig): Observable<ProgressInfo> {
+  private createProgressStream(
+    progressSubject: Subject<ProgressInfo>,
+    config: OperatorConfig
+  ): Observable<ProgressInfo> {
     if (!config.progress?.enabled) {
       return progressSubject.asObservable();
     }
@@ -300,7 +281,7 @@ export class SearchOperator extends Operator<SearchBody, SearchResponse> {
   private createMetricsStream(
     metricsSubject: Subject<MetricsInfo>,
     metricsState: any,
-    config: SearchConfig
+    config: OperatorConfig
   ): Observable<MetricsInfo> {
     if (!config.metrics?.enabled) {
       return metricsSubject.asObservable();

@@ -5,6 +5,12 @@ import { Subscription } from "rxjs";
 import { SearchOperator } from "../src/lib/operators/search-operators";
 import { display } from "../src/lib/util/display";
 
+dotenv.config();
+if (!process.env.NOTION_TOKEN && !process.env.token) {
+  console.warn("⚠️  No NOTION_TOKEN found, skipping live API test");
+  process.exit(1);
+}
+
 const abortController = new AbortController();
 for (const signal of ["SIGINT", "SIGTERM"]) {
   process.on(signal, () => {
@@ -12,28 +18,11 @@ for (const signal of ["SIGINT", "SIGTERM"]) {
   });
 }
 
-dotenv.config();
-
 const main = async () => {
-  let operator: SearchOperator;
-  const token = process.env.NOTION_TOKEN || process.env.token;
-  operator = new SearchOperator();
-
-  if (!token) {
-    console.warn("⚠️  No NOTION_TOKEN found, skipping live API test");
-    process.exit(1);
-  }
-
-  const monitor = display();
-  let startTime = Date.now();
-
-  let progressSubscription: Subscription;
-  let metricsSubscription: Subscription;
-  let streamSubscription: Subscription;
+  const operator = new SearchOperator();
 
   const { stream, progress, metrics } = operator.executeWithStreaming(
     {
-      // query: "",
       filter: {
         value: "page",
         property: "object"
@@ -43,7 +32,7 @@ const main = async () => {
     {
       baseUrl: "https://api.notion.com/v1",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${process.env.NOTION_TOKEN || process.env.token}`,
         "Notion-Version": "2022-06-28"
       },
       progress: {
@@ -57,9 +46,15 @@ const main = async () => {
     }
   );
 
-  let currentMetrics = { requestCount: 0, errorCount: 0, successCount: 0 };
-
   return new Promise<void>((resolve, reject) => {
+    const monitor = display();
+
+    let startTime = Date.now();
+    let progressSubscription: Subscription;
+    let metricsSubscription: Subscription;
+    let streamSubscription: Subscription;
+    let currentMetrics = { requestCount: 0, errorCount: 0, successCount: 0 };
+
     progressSubscription = progress.subscribe((progressInfo) => {
       monitor.next({
         duration: Date.now() - startTime,

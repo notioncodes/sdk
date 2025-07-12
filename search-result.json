@@ -1,9 +1,9 @@
 [
   {
     "object": "page",
-    "id": "22bd7342-e571-815b-ad00-fa5bc891f3c6",
-    "created_time": "2025-07-09T22:54:00.000Z",
-    "last_edited_time": "2025-07-09T22:54:00.000Z",
+    "id": "226d7342-e571-813f-9149-cb2e9a7e029f",
+    "created_time": "2025-07-04T08:30:00.000Z",
+    "last_edited_time": "2025-07-04T08:30:00.000Z",
     "created_by": {
       "object": "user",
       "id": "16ad872b-594c-8163-8a5b-0027470f571a"
@@ -16,49 +16,102 @@
     "icon": {
       "type": "external",
       "external": {
-        "url": "https://www.promptingguide.ai/144-favicon.svg"
+        "url": "https://github.githubassets.com/favicons/favicon-dark.svg"
       }
     },
     "parent": {
       "type": "database_id",
-      "database_id": "203d7342-e571-80cd-b09c-d3b2495d0f91"
+      "database_id": "16ad7342-e571-80fb-8260-e0053556081b"
     },
     "archived": false,
     "in_trash": false,
     "properties": {
-      "Date": {
-        "id": "%3DbxG",
+      "Problem Statements": {
+        "id": "CBk%3A",
+        "type": "relation",
+        "relation": [],
+        "has_more": false
+      },
+      "Created by": {
+        "id": "O%3BRg",
+        "type": "created_by",
+        "created_by": {
+          "object": "user",
+          "id": "16ad872b-594c-8163-8a5b-0027470f571a",
+          "name": "Flylighter",
+          "avatar_url": "https://s3-us-west-2.amazonaws.com/public.notion-static.com/81a2adca-40ef-4e6b-8e7b-ea85fd0a9874/c45a5034-1b75-4739-b462-01dff6153d24.png",
+          "type": "bot",
+          "bot": {}
+        }
+      },
+      "Summary": {
+        "id": "O%7BVV",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "URL": {
+        "id": "TmPU",
+        "type": "url",
+        "url": "https://github.com/mmkal/trpc-cli?tab=readme-ov-file#features-and-limitations"
+      },
+      "Category": {
+        "id": "%5BTeR",
+        "type": "select",
+        "select": {
+          "id": "560b21ec-229b-4336-b385-2d144e442b0c",
+          "name": "Backend",
+          "color": "default"
+        }
+      },
+      "Created": {
+        "id": "dkmT",
         "type": "date",
         "date": {
-          "start": "2025-07-09",
+          "start": "2025-07-04T03:30:00.000-05:00",
           "end": null,
           "time_zone": null
         }
       },
-      "Status": {
-        "id": "MMjd",
+      "Created time": {
+        "id": "jiVg",
+        "type": "created_time",
+        "created_time": "2025-07-04T08:30:00.000Z"
+      },
+      "Deployment Type": {
+        "id": "ncO%3D",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Text Content": {
+        "id": "n~%5ET",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Tags": {
+        "id": "qF_V",
+        "type": "multi_select",
+        "multi_select": [
+          {
+            "id": "03e47ad5-d8e0-4822-9e3a-8dffe5d2c41c",
+            "name": "cli",
+            "color": "red"
+          },
+          {
+            "id": "de6b6e57-db77-4116-abe2-43c4cd640fae",
+            "name": "api",
+            "color": "orange"
+          }
+        ]
+      },
+      "License": {
+        "id": "%7B%3BF~",
         "type": "select",
-        "select": {
-          "id": "4b94e60d-e11d-434c-ab48-024f2858e475",
-          "name": "Draft",
-          "color": "default"
-        }
+        "select": null
       },
-      "Last Updated": {
-        "id": "NGfb",
-        "type": "last_edited_time",
-        "last_edited_time": "2025-07-09T22:54:00.000Z"
-      },
-      "URL": {
-        "id": "ssiU",
-        "type": "url",
-        "url": "https://www.promptingguide.ai/tools"
-      },
-      "Ideas": {
-        "id": "wYBP",
-        "type": "relation",
-        "relation": [],
-        "has_more": false
+      "Date": {
+        "id": "%7CK%3AF",
+        "type": "date",
+        "date": null
       },
       "Name": {
         "id": "title",
@@ -67,7 +120,7 @@
           {
             "type": "text",
             "text": {
-              "content": "Tools & Libraries | Prompt Engineering Guide",
+              "content": "mmkal/trpc-cli: Turn a tRPC router into a type-safe, fully-functional, documented CLI",
               "link": null
             },
             "annotations": {
@@ -78,20 +131,564 @@
               "code": false,
               "color": "default"
             },
-            "plain_text": "Tools & Libraries | Prompt Engineering Guide",
+            "plain_text": "mmkal/trpc-cli: Turn a tRPC router into a type-safe, fully-functional, documented CLI",
             "href": null
           }
         ]
       }
     },
-    "url": "https://www.notion.so/Tools-Libraries-Prompt-Engineering-Guide-22bd7342e571815bad00fa5bc891f3c6",
+    "url": "https://www.notion.so/mmkal-trpc-cli-Turn-a-tRPC-router-into-a-type-safe-fully-functional-documented-CLI-226d7342e571813f9149cb2e9a7e029f",
     "public_url": null
   },
   {
     "object": "page",
-    "id": "22bd7342-e571-8132-9797-c2a31d32b2cb",
-    "created_time": "2025-07-09T22:30:00.000Z",
-    "last_edited_time": "2025-07-09T22:30:00.000Z",
+    "id": "226d7342-e571-815d-b364-cbe1801f4926",
+    "created_time": "2025-07-04T08:20:00.000Z",
+    "last_edited_time": "2025-07-04T08:20:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "16ad872b-594c-8163-8a5b-0027470f571a"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "00000000-0000-0000-0000-000000000003"
+    },
+    "cover": null,
+    "icon": {
+      "type": "external",
+      "external": {
+        "url": "https://orpc.unnoq.com/icon.svg"
+      }
+    },
+    "parent": {
+      "type": "database_id",
+      "database_id": "16ad7342-e571-80fb-8260-e0053556081b"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "Problem Statements": {
+        "id": "CBk%3A",
+        "type": "relation",
+        "relation": [],
+        "has_more": false
+      },
+      "Created by": {
+        "id": "O%3BRg",
+        "type": "created_by",
+        "created_by": {
+          "object": "user",
+          "id": "16ad872b-594c-8163-8a5b-0027470f571a",
+          "name": "Flylighter",
+          "avatar_url": "https://s3-us-west-2.amazonaws.com/public.notion-static.com/81a2adca-40ef-4e6b-8e7b-ea85fd0a9874/c45a5034-1b75-4739-b462-01dff6153d24.png",
+          "type": "bot",
+          "bot": {}
+        }
+      },
+      "Summary": {
+        "id": "O%7BVV",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "URL": {
+        "id": "TmPU",
+        "type": "url",
+        "url": "https://orpc.unnoq.com/"
+      },
+      "Category": {
+        "id": "%5BTeR",
+        "type": "select",
+        "select": {
+          "id": "?pyA",
+          "name": "Frontend",
+          "color": "red"
+        }
+      },
+      "Created": {
+        "id": "dkmT",
+        "type": "date",
+        "date": {
+          "start": "2025-07-04T03:20:00.000-05:00",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Created time": {
+        "id": "jiVg",
+        "type": "created_time",
+        "created_time": "2025-07-04T08:20:00.000Z"
+      },
+      "Deployment Type": {
+        "id": "ncO%3D",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Text Content": {
+        "id": "n~%5ET",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Tags": {
+        "id": "qF_V",
+        "type": "multi_select",
+        "multi_select": [
+          {
+            "id": "de6b6e57-db77-4116-abe2-43c4cd640fae",
+            "name": "api",
+            "color": "orange"
+          }
+        ]
+      },
+      "License": {
+        "id": "%7B%3BF~",
+        "type": "select",
+        "select": null
+      },
+      "Date": {
+        "id": "%7CK%3AF",
+        "type": "date",
+        "date": null
+      },
+      "Name": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "oRPC - Typesafe APIs Made Simple 🪄",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "oRPC - Typesafe APIs Made Simple 🪄",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/oRPC-Typesafe-APIs-Made-Simple-226d7342e571815db364cbe1801f4926",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "226d7342-e571-8116-b656-c026e2abf9c9",
+    "created_time": "2025-07-04T08:15:00.000Z",
+    "last_edited_time": "2025-07-04T08:15:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "16ad872b-594c-8163-8a5b-0027470f571a"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "00000000-0000-0000-0000-000000000003"
+    },
+    "cover": null,
+    "icon": {
+      "type": "external",
+      "external": {
+        "url": "https://valibot.dev/icon-32px.png"
+      }
+    },
+    "parent": {
+      "type": "database_id",
+      "database_id": "16ad7342-e571-80fb-8260-e0053556081b"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "Problem Statements": {
+        "id": "CBk%3A",
+        "type": "relation",
+        "relation": [],
+        "has_more": false
+      },
+      "Created by": {
+        "id": "O%3BRg",
+        "type": "created_by",
+        "created_by": {
+          "object": "user",
+          "id": "16ad872b-594c-8163-8a5b-0027470f571a",
+          "name": "Flylighter",
+          "avatar_url": "https://s3-us-west-2.amazonaws.com/public.notion-static.com/81a2adca-40ef-4e6b-8e7b-ea85fd0a9874/c45a5034-1b75-4739-b462-01dff6153d24.png",
+          "type": "bot",
+          "bot": {}
+        }
+      },
+      "Summary": {
+        "id": "O%7BVV",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "URL": {
+        "id": "TmPU",
+        "type": "url",
+        "url": "https://valibot.dev/"
+      },
+      "Category": {
+        "id": "%5BTeR",
+        "type": "select",
+        "select": {
+          "id": "10f5139f-b513-4a90-ac5a-b6a182b4e13c",
+          "name": "Toolbox",
+          "color": "default"
+        }
+      },
+      "Created": {
+        "id": "dkmT",
+        "type": "date",
+        "date": {
+          "start": "2025-07-04T03:15:00.000-05:00",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Created time": {
+        "id": "jiVg",
+        "type": "created_time",
+        "created_time": "2025-07-04T08:15:00.000Z"
+      },
+      "Deployment Type": {
+        "id": "ncO%3D",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Text Content": {
+        "id": "n~%5ET",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Tags": {
+        "id": "qF_V",
+        "type": "multi_select",
+        "multi_select": [
+          {
+            "id": "77c70c6c-e30c-4ea0-b87e-6f7a092341e8",
+            "name": "js/ts",
+            "color": "default"
+          }
+        ]
+      },
+      "License": {
+        "id": "%7B%3BF~",
+        "type": "select",
+        "select": null
+      },
+      "Date": {
+        "id": "%7CK%3AF",
+        "type": "date",
+        "date": null
+      },
+      "Name": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Valibot: The modular and type safe schema library",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Valibot: The modular and type safe schema library",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/Valibot-The-modular-and-type-safe-schema-library-226d7342e5718116b656c026e2abf9c9",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "226d7342-e571-816a-9154-e65cd1e9d924",
+    "created_time": "2025-07-04T08:09:00.000Z",
+    "last_edited_time": "2025-07-04T08:09:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "16ad872b-594c-8163-8a5b-0027470f571a"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "00000000-0000-0000-0000-000000000003"
+    },
+    "cover": null,
+    "icon": {
+      "type": "external",
+      "external": {
+        "url": "https://h3.dev/icon.svg"
+      }
+    },
+    "parent": {
+      "type": "database_id",
+      "database_id": "16ad7342-e571-80fb-8260-e0053556081b"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "Problem Statements": {
+        "id": "CBk%3A",
+        "type": "relation",
+        "relation": [],
+        "has_more": false
+      },
+      "Created by": {
+        "id": "O%3BRg",
+        "type": "created_by",
+        "created_by": {
+          "object": "user",
+          "id": "16ad872b-594c-8163-8a5b-0027470f571a",
+          "name": "Flylighter",
+          "avatar_url": "https://s3-us-west-2.amazonaws.com/public.notion-static.com/81a2adca-40ef-4e6b-8e7b-ea85fd0a9874/c45a5034-1b75-4739-b462-01dff6153d24.png",
+          "type": "bot",
+          "bot": {}
+        }
+      },
+      "Summary": {
+        "id": "O%7BVV",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "URL": {
+        "id": "TmPU",
+        "type": "url",
+        "url": "https://h3.dev/guide"
+      },
+      "Category": {
+        "id": "%5BTeR",
+        "type": "select",
+        "select": {
+          "id": "10f5139f-b513-4a90-ac5a-b6a182b4e13c",
+          "name": "Toolbox",
+          "color": "default"
+        }
+      },
+      "Created": {
+        "id": "dkmT",
+        "type": "date",
+        "date": {
+          "start": "2025-07-04T03:09:00.000-05:00",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Created time": {
+        "id": "jiVg",
+        "type": "created_time",
+        "created_time": "2025-07-04T08:09:00.000Z"
+      },
+      "Deployment Type": {
+        "id": "ncO%3D",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Text Content": {
+        "id": "n~%5ET",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Tags": {
+        "id": "qF_V",
+        "type": "multi_select",
+        "multi_select": [
+          {
+            "id": "77c70c6c-e30c-4ea0-b87e-6f7a092341e8",
+            "name": "js/ts",
+            "color": "default"
+          }
+        ]
+      },
+      "License": {
+        "id": "%7B%3BF~",
+        "type": "select",
+        "select": null
+      },
+      "Date": {
+        "id": "%7CK%3AF",
+        "type": "date",
+        "date": null
+      },
+      "Name": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Getting Started - H3",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Getting Started - H3",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/Getting-Started-H3-226d7342e571816a9154e65cd1e9d924",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "226d7342-e571-81c5-abba-d3a1e88d763e",
+    "created_time": "2025-07-04T08:09:00.000Z",
+    "last_edited_time": "2025-07-04T08:09:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "16ad872b-594c-8163-8a5b-0027470f571a"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "00000000-0000-0000-0000-000000000003"
+    },
+    "cover": null,
+    "icon": {
+      "type": "external",
+      "external": {
+        "url": "https://unstorage.unjs.io/icon.svg"
+      }
+    },
+    "parent": {
+      "type": "database_id",
+      "database_id": "16ad7342-e571-80fb-8260-e0053556081b"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "Problem Statements": {
+        "id": "CBk%3A",
+        "type": "relation",
+        "relation": [],
+        "has_more": false
+      },
+      "Created by": {
+        "id": "O%3BRg",
+        "type": "created_by",
+        "created_by": {
+          "object": "user",
+          "id": "16ad872b-594c-8163-8a5b-0027470f571a",
+          "name": "Flylighter",
+          "avatar_url": "https://s3-us-west-2.amazonaws.com/public.notion-static.com/81a2adca-40ef-4e6b-8e7b-ea85fd0a9874/c45a5034-1b75-4739-b462-01dff6153d24.png",
+          "type": "bot",
+          "bot": {}
+        }
+      },
+      "Summary": {
+        "id": "O%7BVV",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "URL": {
+        "id": "TmPU",
+        "type": "url",
+        "url": "https://unstorage.unjs.io/"
+      },
+      "Category": {
+        "id": "%5BTeR",
+        "type": "select",
+        "select": {
+          "id": "10f5139f-b513-4a90-ac5a-b6a182b4e13c",
+          "name": "Toolbox",
+          "color": "default"
+        }
+      },
+      "Created": {
+        "id": "dkmT",
+        "type": "date",
+        "date": {
+          "start": "2025-07-04T03:09:00.000-05:00",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Created time": {
+        "id": "jiVg",
+        "type": "created_time",
+        "created_time": "2025-07-04T08:09:00.000Z"
+      },
+      "Deployment Type": {
+        "id": "ncO%3D",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Text Content": {
+        "id": "n~%5ET",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Tags": {
+        "id": "qF_V",
+        "type": "multi_select",
+        "multi_select": [
+          {
+            "id": "77c70c6c-e30c-4ea0-b87e-6f7a092341e8",
+            "name": "js/ts",
+            "color": "default"
+          }
+        ]
+      },
+      "License": {
+        "id": "%7B%3BF~",
+        "type": "select",
+        "select": null
+      },
+      "Date": {
+        "id": "%7CK%3AF",
+        "type": "date",
+        "date": null
+      },
+      "Name": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "unstorage - Universal Key-Value.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "unstorage - Universal Key-Value.",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/unstorage-Universal-Key-Value-226d7342e57181c5abbad3a1e88d763e",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "226d7342-e571-81ed-bc5b-f2b1cbf20667",
+    "created_time": "2025-07-04T07:57:00.000Z",
+    "last_edited_time": "2025-07-04T07:57:00.000Z",
     "created_by": {
       "object": "user",
       "id": "16ad872b-594c-8163-8a5b-0027470f571a"
@@ -113,7 +710,7 @@
         "id": "%3DbxG",
         "type": "date",
         "date": {
-          "start": "2025-07-09",
+          "start": "2025-07-04",
           "end": null,
           "time_zone": null
         }
@@ -130,19 +727,19 @@
       "Last Updated": {
         "id": "NGfb",
         "type": "last_edited_time",
-        "last_edited_time": "2025-07-09T22:30:00.000Z"
+        "last_edited_time": "2025-07-04T07:57:00.000Z"
       },
       "URL": {
         "id": "ssiU",
         "type": "url",
-        "url": "https://pieces.app/blog/vs-code-snippets-guide"
+        "url": "https://stencil.rgst.io/funcs/file.Create.html"
       },
       "Ideas": {
         "id": "wYBP",
         "type": "relation",
         "relation": [
           {
-            "id": "229d7342-e571-81a2-83f6-f6907f257966"
+            "id": "206d7342-e571-80c0-9803-d8a9368c5f0d"
           }
         ],
         "has_more": false
@@ -154,7 +751,7 @@
           {
             "type": "text",
             "text": {
-              "content": "The ultimate guide to VS Code snippets (all ways gathered)",
+              "content": "file.Create | stencil",
               "link": null
             },
             "annotations": {
@@ -165,42 +762,124 @@
               "code": false,
               "color": "default"
             },
-            "plain_text": "The ultimate guide to VS Code snippets (all ways gathered)",
+            "plain_text": "file.Create | stencil",
             "href": null
           }
         ]
       }
     },
-    "url": "https://www.notion.so/The-ultimate-guide-to-VS-Code-snippets-all-ways-gathered-22bd7342e57181329797c2a31d32b2cb",
+    "url": "https://www.notion.so/file-Create-stencil-226d7342e57181edbc5bf2b1cbf20667",
     "public_url": null
   },
   {
     "object": "page",
-    "id": "22bd7342-e571-8022-9efd-c9e20febcb71",
-    "created_time": "2025-07-09T22:22:00.000Z",
-    "last_edited_time": "2025-07-09T22:22:00.000Z",
+    "id": "226d7342-e571-81f0-a044-f9afdbcd8525",
+    "created_time": "2025-07-04T07:34:00.000Z",
+    "last_edited_time": "2025-07-04T07:34:00.000Z",
     "created_by": {
       "object": "user",
-      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
+      "id": "16ad872b-594c-8163-8a5b-0027470f571a"
     },
     "last_edited_by": {
       "object": "user",
-      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
+      "id": "00000000-0000-0000-0000-000000000003"
     },
     "cover": null,
-    "icon": null,
+    "icon": {
+      "type": "external",
+      "external": {
+        "url": "https://automd.unjs.io/icon.svg"
+      }
+    },
     "parent": {
       "type": "database_id",
-      "database_id": "208d7342-e571-801d-b0ad-da982ff524c6"
+      "database_id": "16ad7342-e571-80fb-8260-e0053556081b"
     },
     "archived": false,
     "in_trash": false,
     "properties": {
-      "Tags": {
-        "id": "XELS",
+      "Problem Statements": {
+        "id": "CBk%3A",
+        "type": "relation",
+        "relation": [],
+        "has_more": false
+      },
+      "Created by": {
+        "id": "O%3BRg",
+        "type": "created_by",
+        "created_by": {
+          "object": "user",
+          "id": "16ad872b-594c-8163-8a5b-0027470f571a",
+          "name": "Flylighter",
+          "avatar_url": "https://s3-us-west-2.amazonaws.com/public.notion-static.com/81a2adca-40ef-4e6b-8e7b-ea85fd0a9874/c45a5034-1b75-4739-b462-01dff6153d24.png",
+          "type": "bot",
+          "bot": {}
+        }
+      },
+      "Summary": {
+        "id": "O%7BVV",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "URL": {
+        "id": "TmPU",
+        "type": "url",
+        "url": "https://automd.unjs.io/"
+      },
+      "Category": {
+        "id": "%5BTeR",
+        "type": "select",
+        "select": {
+          "id": "10f5139f-b513-4a90-ac5a-b6a182b4e13c",
+          "name": "Toolbox",
+          "color": "default"
+        }
+      },
+      "Created": {
+        "id": "dkmT",
+        "type": "date",
+        "date": {
+          "start": "2025-07-04T02:34:00.000-05:00",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Created time": {
+        "id": "jiVg",
+        "type": "created_time",
+        "created_time": "2025-07-04T07:34:00.000Z"
+      },
+      "Deployment Type": {
+        "id": "ncO%3D",
         "type": "multi_select",
         "multi_select": []
       },
+      "Text Content": {
+        "id": "n~%5ET",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Tags": {
+        "id": "qF_V",
+        "type": "multi_select",
+        "multi_select": [
+          {
+            "id": "77c70c6c-e30c-4ea0-b87e-6f7a092341e8",
+            "name": "js/ts",
+            "color": "default"
+          }
+        ]
+      },
+      "License": {
+        "id": "%7B%3BF~",
+        "type": "select",
+        "select": null
+      },
+      "Date": {
+        "id": "%7CK%3AF",
+        "type": "date",
+        "date": null
+      },
       "Name": {
         "id": "title",
         "type": "title",
@@ -208,7 +887,7 @@
           {
             "type": "text",
             "text": {
-              "content": " “understanding” can’t be downloaded, it has to be constructed.",
+              "content": "AutoMD - Markdown, Automated.",
               "link": null
             },
             "annotations": {
@@ -219,74 +898,20 @@
               "code": false,
               "color": "default"
             },
-            "plain_text": " “understanding” can’t be downloaded, it has to be constructed.",
+            "plain_text": "AutoMD - Markdown, Automated.",
             "href": null
           }
         ]
       }
     },
-    "url": "https://www.notion.so/understanding-can-t-be-downloaded-it-has-to-be-constructed-22bd7342e57180229efdc9e20febcb71",
+    "url": "https://www.notion.so/AutoMD-Markdown-Automated-226d7342e57181f0a044f9afdbcd8525",
     "public_url": null
   },
   {
     "object": "page",
-    "id": "1e1d7342-e571-801e-953c-d0bc162fea65",
-    "created_time": "2025-04-26T23:56:00.000Z",
-    "last_edited_time": "2025-07-09T22:22:00.000Z",
-    "created_by": {
-      "object": "user",
-      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
-    },
-    "last_edited_by": {
-      "object": "user",
-      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
-    },
-    "cover": null,
-    "icon": {
-      "type": "external",
-      "external": {
-        "url": "https://www.notion.so/icons/briefcase_lightgray.svg"
-      }
-    },
-    "parent": {
-      "type": "workspace",
-      "workspace": true
-    },
-    "archived": false,
-    "in_trash": false,
-    "properties": {
-      "title": {
-        "id": "title",
-        "type": "title",
-        "title": [
-          {
-            "type": "text",
-            "text": {
-              "content": "Scope",
-              "link": null
-            },
-            "annotations": {
-              "bold": false,
-              "italic": false,
-              "strikethrough": false,
-              "underline": false,
-              "code": false,
-              "color": "default"
-            },
-            "plain_text": "Scope",
-            "href": null
-          }
-        ]
-      }
-    },
-    "url": "https://www.notion.so/Scope-1e1d7342e571801e953cd0bc162fea65",
-    "public_url": null
-  },
-  {
-    "object": "page",
-    "id": "22bd7342-e571-813c-b53e-f9f71b674153",
-    "created_time": "2025-07-09T22:03:00.000Z",
-    "last_edited_time": "2025-07-09T22:03:00.000Z",
+    "id": "226d7342-e571-81a9-83f5-d1e142daf2d6",
+    "created_time": "2025-07-04T07:31:00.000Z",
+    "last_edited_time": "2025-07-04T07:31:00.000Z",
     "created_by": {
       "object": "user",
       "id": "16ad872b-594c-8163-8a5b-0027470f571a"
@@ -299,7 +924,143 @@
     "icon": {
       "type": "external",
       "external": {
-        "url": "https://www.promptscape.dev/img/favicon.ico"
+        "url": "https://github.githubassets.com/favicons/favicon-dark.svg"
+      }
+    },
+    "parent": {
+      "type": "database_id",
+      "database_id": "16ad7342-e571-80fb-8260-e0053556081b"
+    },
+    "archived": false,
+    "in_trash": false,
+    "properties": {
+      "Problem Statements": {
+        "id": "CBk%3A",
+        "type": "relation",
+        "relation": [],
+        "has_more": false
+      },
+      "Created by": {
+        "id": "O%3BRg",
+        "type": "created_by",
+        "created_by": {
+          "object": "user",
+          "id": "16ad872b-594c-8163-8a5b-0027470f571a",
+          "name": "Flylighter",
+          "avatar_url": "https://s3-us-west-2.amazonaws.com/public.notion-static.com/81a2adca-40ef-4e6b-8e7b-ea85fd0a9874/c45a5034-1b75-4739-b462-01dff6153d24.png",
+          "type": "bot",
+          "bot": {}
+        }
+      },
+      "Summary": {
+        "id": "O%7BVV",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "URL": {
+        "id": "TmPU",
+        "type": "url",
+        "url": "https://github.com/unjs/pathe/tree/main"
+      },
+      "Category": {
+        "id": "%5BTeR",
+        "type": "select",
+        "select": {
+          "id": "10f5139f-b513-4a90-ac5a-b6a182b4e13c",
+          "name": "Toolbox",
+          "color": "default"
+        }
+      },
+      "Created": {
+        "id": "dkmT",
+        "type": "date",
+        "date": {
+          "start": "2025-07-04T02:31:00.000-05:00",
+          "end": null,
+          "time_zone": null
+        }
+      },
+      "Created time": {
+        "id": "jiVg",
+        "type": "created_time",
+        "created_time": "2025-07-04T07:31:00.000Z"
+      },
+      "Deployment Type": {
+        "id": "ncO%3D",
+        "type": "multi_select",
+        "multi_select": []
+      },
+      "Text Content": {
+        "id": "n~%5ET",
+        "type": "rich_text",
+        "rich_text": []
+      },
+      "Tags": {
+        "id": "qF_V",
+        "type": "multi_select",
+        "multi_select": [
+          {
+            "id": "8783b667-a964-4587-84bd-b0a6cc49c490",
+            "name": "components",
+            "color": "default"
+          }
+        ]
+      },
+      "License": {
+        "id": "%7B%3BF~",
+        "type": "select",
+        "select": null
+      },
+      "Date": {
+        "id": "%7CK%3AF",
+        "type": "date",
+        "date": null
+      },
+      "Name": {
+        "id": "title",
+        "type": "title",
+        "title": [
+          {
+            "type": "text",
+            "text": {
+              "content": "unjs/pathe: 🛣️ Drop-in replacement of the Node.js's path module module that ensures paths are normalized",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "unjs/pathe: 🛣️ Drop-in replacement of the Node.js's path module module that ensures paths are normalized",
+            "href": null
+          }
+        ]
+      }
+    },
+    "url": "https://www.notion.so/unjs-pathe-Drop-in-replacement-of-the-Node-js-s-path-module-module-that-ensures-paths-are-norma-226d7342e57181a983f5d1e142daf2d6",
+    "public_url": null
+  },
+  {
+    "object": "page",
+    "id": "226d7342-e571-814e-b45a-fca1b89e3d62",
+    "created_time": "2025-07-04T07:29:00.000Z",
+    "last_edited_time": "2025-07-04T07:29:00.000Z",
+    "created_by": {
+      "object": "user",
+      "id": "16ad872b-594c-8163-8a5b-0027470f571a"
+    },
+    "last_edited_by": {
+      "object": "user",
+      "id": "00000000-0000-0000-0000-000000000003"
+    },
+    "cover": null,
+    "icon": {
+      "type": "external",
+      "external": {
+        "url": "https://github.githubassets.com/favicons/favicon-dark.svg"
       }
     },
     "parent": {
@@ -313,7 +1074,7 @@
         "id": "%3DbxG",
         "type": "date",
         "date": {
-          "start": "2025-07-09",
+          "start": "2025-07-04",
           "end": null,
           "time_zone": null
         }
@@ -330,17 +1091,21 @@
       "Last Updated": {
         "id": "NGfb",
         "type": "last_edited_time",
-        "last_edited_time": "2025-07-09T22:03:00.000Z"
+        "last_edited_time": "2025-07-04T07:29:00.000Z"
       },
       "URL": {
         "id": "ssiU",
         "type": "url",
-        "url": "https://www.promptscape.dev/"
+        "url": "https://github.com/nrjdalal/gitpick/blob/main/bin/utils/get-default-branch.ts"
       },
       "Ideas": {
         "id": "wYBP",
         "type": "relation",
-        "relation": [],
+        "relation": [
+          {
+            "id": "206d7342-e571-80c0-9803-d8a9368c5f0d"
+          }
+        ],
         "has_more": false
       },
       "Name": {
@@ -350,7 +1115,7 @@
           {
             "type": "text",
             "text": {
-              "content": "Promptscape | Promptscape",
+              "content": "gitpick/bin/utils/get-default-branch.ts at main · nrjdalal/gitpick",
               "link": null
             },
             "annotations": {
@@ -361,20 +1126,20 @@
               "code": false,
               "color": "default"
             },
-            "plain_text": "Promptscape | Promptscape",
+            "plain_text": "gitpick/bin/utils/get-default-branch.ts at main · nrjdalal/gitpick",
             "href": null
           }
         ]
       }
     },
-    "url": "https://www.notion.so/Promptscape-Promptscape-22bd7342e571813cb53ef9f71b674153",
+    "url": "https://www.notion.so/gitpick-bin-utils-get-default-branch-ts-at-main-nrjdalal-gitpick-226d7342e571814eb45afca1b89e3d62",
     "public_url": null
   },
   {
     "object": "page",
-    "id": "22bd7342-e571-8134-acd5-fa5851e9dc58",
-    "created_time": "2025-07-09T21:57:00.000Z",
-    "last_edited_time": "2025-07-09T21:57:00.000Z",
+    "id": "226d7342-e571-81c0-ad01-c296633b7383",
+    "created_time": "2025-07-04T07:26:00.000Z",
+    "last_edited_time": "2025-07-04T07:26:00.000Z",
     "created_by": {
       "object": "user",
       "id": "16ad872b-594c-8163-8a5b-0027470f571a"
@@ -387,7 +1152,7 @@
     "icon": {
       "type": "external",
       "external": {
-        "url": "https://marketplace.visualstudio.com/favicon.ico"
+        "url": "https://github.githubassets.com/favicons/favicon-dark.svg"
       }
     },
     "parent": {
@@ -401,7 +1166,7 @@
         "id": "%3DbxG",
         "type": "date",
         "date": {
-          "start": "2025-07-09",
+          "start": "2025-07-04",
           "end": null,
           "time_zone": null
         }
@@ -418,17 +1183,21 @@
       "Last Updated": {
         "id": "NGfb",
         "type": "last_edited_time",
-        "last_edited_time": "2025-07-09T21:57:00.000Z"
+        "last_edited_time": "2025-07-04T07:26:00.000Z"
       },
       "URL": {
         "id": "ssiU",
         "type": "url",
-        "url": "https://marketplace.visualstudio.com/search?term=tag%3Aprompt&target=VSCode&category=All%20categories&sortBy=Relevance"
+        "url": "https://github.com/unjs/ungh"
       },
       "Ideas": {
         "id": "wYBP",
         "type": "relation",
-        "relation": [],
+        "relation": [
+          {
+            "id": "226d7342-e571-8106-aa9c-c81eb1728dd9"
+          }
+        ],
         "has_more": false
       },
       "Name": {
@@ -438,7 +1207,7 @@
           {
             "type": "text",
             "text": {
-              "content": "Search results - tag:prompt | Visual Studio Code , Visual Studio Marketplace",
+              "content": "unjs/ungh: 🐙 Unlimited access to github API",
               "link": null
             },
             "annotations": {
@@ -449,209 +1218,13 @@
               "code": false,
               "color": "default"
             },
-            "plain_text": "Search results - tag:prompt | Visual Studio Code , Visual Studio Marketplace",
+            "plain_text": "unjs/ungh: 🐙 Unlimited access to github API",
             "href": null
           }
         ]
       }
     },
-    "url": "https://www.notion.so/Search-results-tag-prompt-Visual-Studio-Code-Visual-Studio-Marketplace-22bd7342e5718134acd5fa5851e9dc58",
-    "public_url": null
-  },
-  {
-    "object": "page",
-    "id": "22bd7342-e571-8068-b3c2-f9e078b1cc07",
-    "created_time": "2025-07-09T17:33:00.000Z",
-    "last_edited_time": "2025-07-09T20:08:00.000Z",
-    "created_by": {
-      "object": "user",
-      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
-    },
-    "last_edited_by": {
-      "object": "user",
-      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
-    },
-    "cover": null,
-    "icon": null,
-    "parent": {
-      "type": "page_id",
-      "page_id": "22bd7342-e571-8000-84c7-c6d150b1b2a8"
-    },
-    "archived": false,
-    "in_trash": false,
-    "properties": {
-      "title": {
-        "id": "title",
-        "type": "title",
-        "title": [
-          {
-            "type": "text",
-            "text": {
-              "content": "Mistral Small 3.2 24B (free) | Chutes",
-              "link": null
-            },
-            "annotations": {
-              "bold": false,
-              "italic": false,
-              "strikethrough": false,
-              "underline": false,
-              "code": false,
-              "color": "default"
-            },
-            "plain_text": "Mistral Small 3.2 24B (free) | Chutes",
-            "href": null
-          }
-        ]
-      }
-    },
-    "url": "https://www.notion.so/Mistral-Small-3-2-24B-free-Chutes-22bd7342e5718068b3c2f9e078b1cc07",
-    "public_url": null
-  },
-  {
-    "object": "page",
-    "id": "22bd7342-e571-806c-960c-d104ad6cccfe",
-    "created_time": "2025-07-09T17:34:00.000Z",
-    "last_edited_time": "2025-07-09T18:01:00.000Z",
-    "created_by": {
-      "object": "user",
-      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
-    },
-    "last_edited_by": {
-      "object": "user",
-      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
-    },
-    "cover": null,
-    "icon": null,
-    "parent": {
-      "type": "page_id",
-      "page_id": "22bd7342-e571-8000-84c7-c6d150b1b2a8"
-    },
-    "archived": false,
-    "in_trash": false,
-    "properties": {
-      "title": {
-        "id": "title",
-        "type": "title",
-        "title": [
-          {
-            "type": "text",
-            "text": {
-              "content": "Devstral Small (free) | Chutes",
-              "link": null
-            },
-            "annotations": {
-              "bold": false,
-              "italic": false,
-              "strikethrough": false,
-              "underline": false,
-              "code": false,
-              "color": "default"
-            },
-            "plain_text": "Devstral Small (free) | Chutes",
-            "href": null
-          }
-        ]
-      }
-    },
-    "url": "https://www.notion.so/Devstral-Small-free-Chutes-22bd7342e571806c960cd104ad6cccfe",
-    "public_url": null
-  },
-  {
-    "object": "page",
-    "id": "22bd7342-e571-8016-8911-e959b72d5e0f",
-    "created_time": "2025-07-09T17:33:00.000Z",
-    "last_edited_time": "2025-07-09T17:33:00.000Z",
-    "created_by": {
-      "object": "user",
-      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
-    },
-    "last_edited_by": {
-      "object": "user",
-      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
-    },
-    "cover": null,
-    "icon": null,
-    "parent": {
-      "type": "page_id",
-      "page_id": "22bd7342-e571-8000-84c7-c6d150b1b2a8"
-    },
-    "archived": false,
-    "in_trash": false,
-    "properties": {
-      "title": {
-        "id": "title",
-        "type": "title",
-        "title": [
-          {
-            "type": "text",
-            "text": {
-              "content": "Coder Large | Together",
-              "link": null
-            },
-            "annotations": {
-              "bold": false,
-              "italic": false,
-              "strikethrough": false,
-              "underline": false,
-              "code": false,
-              "color": "default"
-            },
-            "plain_text": "Coder Large | Together",
-            "href": null
-          }
-        ]
-      }
-    },
-    "url": "https://www.notion.so/Coder-Large-Together-22bd7342e57180168911e959b72d5e0f",
-    "public_url": null
-  },
-  {
-    "object": "page",
-    "id": "22bd7342-e571-805e-8cbe-cdd03490a805",
-    "created_time": "2025-07-09T17:33:00.000Z",
-    "last_edited_time": "2025-07-09T17:33:00.000Z",
-    "created_by": {
-      "object": "user",
-      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
-    },
-    "last_edited_by": {
-      "object": "user",
-      "id": "ddf8f9da-d6d5-4c0a-ad8e-05836f719816"
-    },
-    "cover": null,
-    "icon": null,
-    "parent": {
-      "type": "page_id",
-      "page_id": "22bd7342-e571-8000-84c7-c6d150b1b2a8"
-    },
-    "archived": false,
-    "in_trash": false,
-    "properties": {
-      "title": {
-        "id": "title",
-        "type": "title",
-        "title": [
-          {
-            "type": "text",
-            "text": {
-              "content": "GPT-4.1 | openai",
-              "link": null
-            },
-            "annotations": {
-              "bold": false,
-              "italic": false,
-              "strikethrough": false,
-              "underline": false,
-              "code": false,
-              "color": "default"
-            },
-            "plain_text": "GPT-4.1 | openai",
-            "href": null
-          }
-        ]
-      }
-    },
-    "url": "https://www.notion.so/GPT-4-1-openai-22bd7342e571805e8cbecdd03490a805",
+    "url": "https://www.notion.so/unjs-ungh-Unlimited-access-to-github-API-226d7342e57181c0ad01c296633b7383",
     "public_url": null
   }
 ]
