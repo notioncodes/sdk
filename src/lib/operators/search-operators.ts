@@ -2,26 +2,9 @@ import { from, Observable, throwError } from "rxjs";
 import { fromFetch } from "rxjs/fetch";
 import { catchError, switchMap, tap } from "rxjs/operators";
 import type { ListResponse, PageOrDatabase } from "../schemas/types/reponses";
-import type { SearchParameters } from "../schemas/types/request";
+import type { SearchBody } from "../schemas/types/search";
 import { log } from "../util/logging";
-import { Operator, type NotionConfig } from "./operator";
-
-/**
- * Request type for searching Notion.
- */
-export interface SearchRequest extends Partial<SearchParameters> {
-  query: string;
-  filter?: {
-    value: "page" | "database";
-    property: "object";
-  };
-  sort?: {
-    direction: "ascending" | "descending";
-    timestamp: "last_edited_time";
-  };
-  startCursor?: string;
-  pageSize?: number;
-}
+import { Operator, type OperatorConfig } from "./operator";
 
 /**
  * Response type for search results.
@@ -45,10 +28,10 @@ export interface SearchResponse extends ListResponse {
  * );
  * ```
  */
-export class SearchOperator extends Operator<SearchRequest, SearchResponse> {
+export class SearchOperator extends Operator<SearchBody, SearchResponse> {
   protected schemaName = "notion.search";
 
-  execute(request: SearchRequest, context: NotionConfig): Observable<SearchResponse> {
+  execute(request: SearchBody, context: OperatorConfig): Observable<SearchResponse> {
     const body: any = {
       query: request.query
     };
@@ -61,12 +44,12 @@ export class SearchOperator extends Operator<SearchRequest, SearchResponse> {
       body.sort = request.sort;
     }
 
-    if (request.startCursor) {
-      body.start_cursor = request.startCursor;
+    if (request.start_cursor) {
+      body.start_cursor = request.start_cursor;
     }
 
-    if (request.pageSize) {
-      body.page_size = request.pageSize;
+    if (request.page_size) {
+      body.page_size = request.page_size;
     }
 
     log.debug("search-operator", body);
@@ -118,48 +101,3 @@ export class SearchOperator extends Operator<SearchRequest, SearchResponse> {
     }
   }
 }
-
-/**
- * Operator for searching only pages.
- */
-export class SearchPagesOperator extends SearchOperator {
-  execute(request: SearchRequest, context: NotionConfig): Observable<SearchResponse> {
-    // Force filter to pages only
-    const pageSearchRequest: SearchRequest = {
-      ...request,
-      filter: {
-        property: "object",
-        value: "page"
-      }
-    };
-
-    return super.execute(pageSearchRequest, context);
-  }
-}
-
-/**
- * Operator for searching only databases.
- */
-export class SearchDatabasesOperator extends SearchOperator {
-  execute(request: SearchRequest, context: NotionConfig): Observable<SearchResponse> {
-    // Force filter to databases only
-    const dbSearchRequest: SearchRequest = {
-      ...request,
-      filter: {
-        property: "object",
-        value: "database"
-      }
-    };
-
-    return super.execute(dbSearchRequest, context);
-  }
-}
-
-/**
- * Factory functions for creating search operators.
- */
-export const searchOperators = {
-  all: () => new SearchOperator(),
-  pages: () => new SearchPagesOperator(),
-  databases: () => new SearchDatabasesOperator()
-};

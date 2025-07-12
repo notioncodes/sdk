@@ -2,7 +2,7 @@ import type { Type } from "arktype";
 import { concatMap, from, map, reduce, switchMap, type Observable } from "rxjs";
 import type { RawQueryConfig, SchemaRegistryType } from "../builder";
 import { QueryBuilder } from "../builder";
-import type { ReadContext } from "../context";
+import type { Context } from "../context";
 
 /**
  * Factory function to create a reactive query builder.
@@ -10,7 +10,7 @@ import type { ReadContext } from "../context";
 export function createQueryBuilder<T>(
   schemaName: string,
   schemaRegistry: SchemaRegistryType,
-  executor: (context: ReadContext<T>) => Observable<T[]>,
+  executor: (context: Context<T>) => Observable<T[]>,
   rawExecutor?: (config: RawQueryConfig) => Observable<T[]>,
   schema?: Type<T>
 ): QueryBuilder<T> {

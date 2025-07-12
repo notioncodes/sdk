@@ -1,5 +1,5 @@
 import { type } from "arktype";
-import { color, numberFormat } from "./primitives";
+import { color, numberFormat, shortId, uuid } from "./primitives";
 
 /**
  * Rich text object schema for text content with annotations.
@@ -169,18 +169,39 @@ export const formulaDatabasePropertySchema = type({
 });
 
 /**
+ * Schema for a relation ID.
+ *
+ * @remarks
+ * Format is around "%3AJsk" and "S%3DR%3D" etc.
+ */
+export const relationIdSchema = type({
+  id: uuid
+});
+
+/**
  * Database property schema for relation type.
+ *
+ * @remarks
+ * Shape from the API response:
+ * ```json
+ * {
+ *   "Content Links": {
+ *     "id": "%3AJsk",
+ *     "relation": [
+ *       {
+ *         "id": "1e5d7342-e571-804b-9fd2-d97fd12ae897"
+ *       }
+ *     ],
+ *     "has_more": false
+ *   }
+ * }
+ * ```
  */
 export const relationDatabasePropertySchema = type({
+  id: shortId.optional(),
   type: '"relation"',
-  relation: {
-    database_id: "string",
-    type: "string",
-    "dual_property?": {
-      synced_property_name: "string",
-      synced_property_id: "string"
-    }
-  }
+  relation: relationIdSchema.array().optional(),
+  has_more: "boolean"
 });
 
 /**
@@ -419,7 +440,6 @@ export const pagePropertyValueSchema = type([
   buttonPagePropertyValueSchema
 ]);
 
-// Types
 export type DatabaseProperty = typeof databasePropertySchema.infer;
 export type PagePropertyValue = typeof pagePropertyValueSchema.infer;
 
@@ -442,3 +462,40 @@ export function validateDatabaseProperty(property: unknown): property is Databas
 export function validatePagePropertyValue(value: unknown): value is PagePropertyValue {
   return pagePropertyValueSchema.allows(value);
 }
+
+export const DatabaseProperty = {
+  TITLE: titleDatabasePropertySchema,
+  RICHTEXT: richTextDatabasePropertySchema,
+  NUMBER: numberDatabasePropertySchema,
+  SELECT: selectDatabasePropertySchema,
+  MULTI_SELECT: multiSelectDatabasePropertySchema,
+  STATUS: statusDatabasePropertySchema,
+  DATE: dateDatabasePropertySchema,
+  PEOPLE: peopleDatabasePropertySchema,
+  FILES: filesDatabasePropertySchema,
+  CHECKBOX: checkboxDatabasePropertySchema,
+  URL: urlDatabasePropertySchema,
+  EMAIL: emailDatabasePropertySchema,
+  PHONE_NUMBER: phoneNumberDatabasePropertySchema,
+  FORMULA: formulaDatabasePropertySchema,
+  RELATION: relationDatabasePropertySchema,
+  ROLLUP: rollupDatabasePropertySchema
+};
+
+/**
+ * Creates a relation property configuration.
+ *
+ * @param name - The name of the relation property
+ * @param databaseId - The database ID that this relation points to
+ * @returns A relation property configuration object
+ */
+export const relation = (name: string, databaseId: string) => {
+  return {
+    [name]: {
+      type: "relation",
+      relation: {
+        database_id: databaseId
+      }
+    }
+  };
+};

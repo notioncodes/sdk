@@ -24,6 +24,6 @@
     },
     "types": ["vitest/globals"]
   },
-  "include": ["./src", "./test"],
+  "include": ["./src", "./test", "../cli/src/lib/config/config.ts"],
   "exclude": ["**/*.test.ts"]
 }

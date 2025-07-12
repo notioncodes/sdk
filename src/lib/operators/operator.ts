@@ -1,12 +1,13 @@
-import { from, Observable, of, throwError } from "rxjs";
+import { from, Observable, throwError } from "rxjs";
 import { catchError, map, mergeMap, retry, tap } from "rxjs/operators";
+import type { NotionConfig } from "../config";
 import type { SchemaLoader } from "../schemas/loader";
 import { log } from "../util/logging";
 
 /**
  * Operator execution context containing shared resources.
  */
-export interface NotionConfig {
+export interface OperatorConfig {
   schemaLoader?: SchemaLoader;
   baseUrl?: string;
   headers?: Record<string, string>;
@@ -80,7 +81,7 @@ export abstract class Operator<TRequest = unknown, TResponse = unknown> {
    * @param context - The execution context
    * @returns Observable stream of the response
    */
-  abstract execute(request: TRequest, context: NotionConfig): Observable<TResponse>;
+  abstract execute(request: TRequest, context: OperatorConfig, notionConfig: NotionConfig): Observable<TResponse>;
 
   /**
    * Run the operator with full error handling and validation.
@@ -90,24 +91,29 @@ export abstract class Operator<TRequest = unknown, TResponse = unknown> {
    * @param options - Execution options
    * @returns Observable stream of the operator result
    */
-  run(request: TRequest, config: NotionConfig, options?: OperatorOptions): Observable<OperatorResult<TResponse>> {
+  run(
+    request: TRequest,
+    config: OperatorConfig,
+    notionConfig: NotionConfig,
+    options?: OperatorOptions
+  ): Observable<OperatorResult<TResponse>> {
     const mergedOptions = { ...this.defaultOptions, ...options };
     const startTime = Date.now();
 
-    return this.execute(request, config).pipe(
+    return this.execute(request, config, notionConfig).pipe(
       // Retry logic
       retry({
         count: mergedOptions.retries || 0,
         delay: mergedOptions.retryDelay || 1000
       }),
 
-      // Validate response if enabled
-      mergeMap((response) => {
-        if (mergedOptions.validateResponse && this.schemaName) {
-          return this.validateResponse(response, config.schemaLoader);
-        }
-        return of(response);
-      }),
+      // // Validate response if enabled
+      // mergeMap((response) => {
+      //   if (mergedOptions.validateResponse && this.schemaName) {
+      //     return this.validateResponse(response, config.schemaLoader);
+      //   }
+      //   return of(response);
+      // }),
 
       // Wrap in result
       map((data) => ({
@@ -199,8 +205,10 @@ export class ComposedOperator<TRequest, TMiddle, TResponse> extends Operator<TRe
     this.schemaName = (second as any).schemaName;
   }
 
-  execute(request: TRequest, context: NotionConfig): Observable<TResponse> {
-    return this.first.run(request, context).pipe(mergeMap((result) => this.second.execute(result.data, context)));
+  execute(request: TRequest, context: OperatorConfig, notionConfig: NotionConfig): Observable<TResponse> {
+    return this.first
+      .run(request, context, notionConfig)
+      .pipe(mergeMap((result) => this.second.execute(result.data, context, notionConfig)));
   }
 }
 
@@ -212,7 +220,7 @@ export class ComposedOperator<TRequest, TMiddle, TResponse> extends Operator<TRe
  */
 export function createOperator<TRequest, TResponse>(config: {
   schemaName: string;
-  execute: (request: TRequest, context: NotionConfig) => Observable<TResponse>;
+  execute: (request: TRequest, context: OperatorConfig, notionConfig: NotionConfig) => Observable<TResponse>;
   options?: OperatorOptions;
 }): Operator<TRequest, TResponse> {
   class ConfiguredOperator extends Operator<TRequest, TResponse> {
@@ -225,8 +233,8 @@ export function createOperator<TRequest, TResponse>(config: {
       ...config.options
     };
 
-    execute(request: TRequest, context: NotionConfig): Observable<TResponse> {
-      return config.execute(request, context);
+    execute(request: TRequest, context: OperatorConfig, notionConfig: NotionConfig): Observable<TResponse> {
+      return config.execute(request, context, notionConfig);
     }
   }
 

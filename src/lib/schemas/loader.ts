@@ -154,9 +154,10 @@ export class SchemaLoader {
 
     this.updateStats({ cacheMisses: this.state.stats.cacheMisses + 1 });
 
-    this.cache.set(name, config.resolver(this.context));
+    // this.cache.set(name, config.resolver(this.context));
 
-    return config.resolver();
+    // return config.resolver(this.context);
+    return of(type("unknown") as unknown as Type<T>);
   }
 
   /**
@@ -278,68 +279,68 @@ export class SchemaLoader {
   }
 }
 
-export const createNotionSchemaLoader = (registry?: SchemaRegistryType): SchemaLoader => {
-  const loader = new SchemaLoader(registry);
+// export const createNotionSchemaLoader = (registry?: SchemaRegistryType): SchemaLoader => {
+//   const loader = new SchemaLoader(registry);
 
-  loader.register({
-    name: "notion.page",
-    resolver: (ctx: Context<unknown>) => {
-      console.log("asdf", ctx);
-      return of(pageSchema);
-    },
-    metadata: { api: "notion", type: "page" }
-  });
+//   loader.register({
+//     name: "notion.page",
+//     resolver: (ctx: Context<unknown>) => {
+//       console.log("asdf", ctx);
+//       return of(pageSchema);
+//     },
+//     metadata: { api: "notion", type: "page" }
+//   });
 
-  // loader.register({
-  //   name: "notion.database",
-  //   factory: () => schemaFactories.database.create(),
-  //   metadata: { api: "notion", type: "database" }
-  // });
+//   // loader.register({
+//   //   name: "notion.database",
+//   //   factory: () => schemaFactories.database.create(),
+//   //   metadata: { api: "notion", type: "database" }
+//   // });
 
-  // loader.register({
-  //   name: "notion.block",
-  //   factory: schemaFactories.block.create,
-  //   metadata: { api: "notion", type: "block" }
-  // });
+//   // loader.register({
+//   //   name: "notion.block",
+//   //   factory: schemaFactories.block.create,
+//   //   metadata: { api: "notion", type: "block" }
+//   // });
 
-  // loader.register({
-  //   name: "notion.user",
-  //   factory: schemaFactories.user.create,
-  //   metadata: { api: "notion", type: "user" }
-  // });
+//   // loader.register({
+//   //   name: "notion.user",
+//   //   factory: schemaFactories.user.create,
+//   //   metadata: { api: "notion", type: "user" }
+//   // });
 
-  // loader.register({
-  //   name: "notion.queryDatabase",
-  //   factory: schemaFactories.database.query,
-  //   metadata: { api: "notion", type: "query" }
-  // });
+//   // loader.register({
+//   //   name: "notion.queryDatabase",
+//   //   factory: schemaFactories.database.query,
+//   //   metadata: { api: "notion", type: "query" }
+//   // });
 
-  // loader.register({
-  //   name: "notion.listDatabases",
-  //   factory: schemaFactories.database.list,
-  //   metadata: { api: "notion", type: "list" }
-  // });
+//   // loader.register({
+//   //   name: "notion.listDatabases",
+//   //   factory: schemaFactories.database.list,
+//   //   metadata: { api: "notion", type: "list" }
+//   // });
 
-  // loader.register({
-  //   name: "notion.listBlockChildren",
-  //   factory: schemaFactories.block.list,
-  //   metadata: { api: "notion", type: "list" }
-  // });
+//   // loader.register({
+//   //   name: "notion.listBlockChildren",
+//   //   factory: schemaFactories.block.list,
+//   //   metadata: { api: "notion", type: "list" }
+//   // });
 
-  // loader.register({
-  //   name: "notion.search",
-  //   factory: schemaFactories.page.search,
-  //   metadata: { api: "notion", type: "search" }
-  // });
+//   // loader.register({
+//   //   name: "notion.search",
+//   //   factory: schemaFactories.page.search,
+//   //   metadata: { api: "notion", type: "search" }
+//   // });
 
-  // loader.register({
-  //   name: "notion.listUsers",
-  //   factory: schemaFactories.user.list,
-  //   metadata: { api: "notion", type: "list" }
-  // });
+//   // loader.register({
+//   //   name: "notion.listUsers",
+//   //   factory: schemaFactories.user.list,
+//   //   metadata: { api: "notion", type: "list" }
+//   // });
 
-  return loader;
-};
+//   return loader;
+// };
 
 export const schemaFactories = {
   page: {
