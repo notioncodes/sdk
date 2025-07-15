@@ -1,62 +1,14 @@
+import type { HTTPConfig, HTTPResponse } from "$lib/util/http/client";
 import { randomUUID } from "node:crypto";
 import { Observable } from "rxjs";
-
-export class HTTPConfig {
-  token?: string;
-  baseUrl: string;
-  headers: Record<string, string>;
-  constructor(config: Partial<HTTPConfig> = {}) {
-    this.baseUrl = config?.baseUrl ?? "https://api.notion.com/v1";
-    this.headers = {
-      "Content-Type": "application/json",
-      "Notion-Version": "2022-06-28",
-      Authorization: `Bearer ${config?.token}`,
-      ...config?.headers
-    };
-    delete config?.token;
-  }
-}
-
-/**
- * Progress tracking configuration.
- */
-export class ProgressConfig {
-  enabled: boolean;
-  interval: number;
-  estimateTotal?: boolean;
-  constructor(config: Partial<ProgressConfig> = {}) {
-    this.enabled = config.enabled ?? true;
-    this.interval = config.interval ?? 1000;
-    this.estimateTotal = config.estimateTotal;
-  }
-}
-
-export class MetricsConfig {
-  enabled: boolean;
-  interval: number;
-  includeLatency?: boolean;
-  includeErrorRates?: boolean;
-  constructor(config: Partial<MetricsConfig> = {}) {
-    this.enabled = config.enabled ?? true;
-    this.interval = config.interval ?? 1000;
-    this.includeLatency = config.includeLatency;
-    this.includeErrorRates = config.includeErrorRates;
-  }
-}
 
 /**
  * Configuration for operator execution.
  */
 export class OperatorConfig {
-  progress?: ProgressConfig;
-  metrics?: MetricsConfig;
-  retry?: RetryConfig;
   cache?: boolean;
   timeout?: number;
   constructor(config: Partial<OperatorConfig> = {}) {
-    this.progress = new ProgressConfig(config.progress);
-    this.metrics = new MetricsConfig(config.metrics);
-    this.retry = new RetryConfig(config.retry);
     this.cache = config.cache ?? false;
     this.timeout = config.timeout ?? 10000;
   }
@@ -92,64 +44,16 @@ export class OperatorResult<TData> {
   }
 }
 
-/**
- * Progress tracking information.
- */
-export class ProgressInfo {
-  current: number;
-  total?: number;
-  percentage?: number;
-  message?: string;
-  stage?: string;
-  constructor(config: Partial<ProgressInfo> = {}) {
-    this.current = config.current ?? 0;
-    this.total = config.total;
-    this.percentage = config.percentage;
-    this.message = config.message;
-    this.stage = config.stage;
-  }
-}
-
-/**
- * Metrics information for operator execution.
- */
-export class MetricsInfo {
-  requestCount: number;
-  totalDuration: number;
-  averageDuration: number;
-  errorCount: number;
-  successCount: number;
-  throughput: number;
-  timestamp: Date;
-  constructor(config: Partial<MetricsInfo> = {}) {
-    this.requestCount = config.requestCount ?? 0;
-    this.totalDuration = config.totalDuration ?? 0;
-    this.averageDuration = config.averageDuration ?? 0;
-    this.errorCount = config.errorCount ?? 0;
-    this.successCount = config.successCount ?? 0;
-    this.throughput = config.throughput ?? 0;
-    this.timestamp = config.timestamp ?? new Date();
-  }
-}
-
-export class RetryConfig {
-  retries?: number;
-  delay?: number;
-  constructor(config: Partial<RetryConfig> = {}) {
-    this.retries = config.retries ?? 3;
-    this.delay = config.delay ?? 1000;
-  }
+export interface ExecuteResult<TResponse> {
+  stream: Observable<TResponse>;
+  // progress: Observable<ProgressReport>;
+  cancel: () => void;
 }
 
 /**
  * Abstract base class for all operators that implement this contract.
  */
 export abstract class Operator<TPayload, TResponse> {
-  /**
-   * Schema name for tracking and validation set by the subclass.
-   */
-  protected abstract schemaName: string;
-
   /**
    * Execute the operator with the given request and configuration to be
    * implemented by subclasses.
@@ -163,5 +67,41 @@ export abstract class Operator<TPayload, TResponse> {
    *
    * @returns Observable of the response.
    */
-  abstract execute(payload: TPayload, httpConfig: HTTPConfig, operatorConfig: OperatorConfig): Observable<TResponse>;
+  abstract execute(payload: TPayload, httpConfig: HTTPConfig, operatorConfig: OperatorConfig): HTTPResponse<TResponse>;
+
+  // /**
+  //  * Create progress tracking stream with configurable intervals.
+  //  */
+  // createProgressStream(progressSubject: Subject<ProgressReport>, config: OperatorConfig): Observable<ProgressReport> {
+  //   if (!config.progress?.enabled) {
+  //     return progressSubject.asObservable();
+  //   }
+
+  //   const intervalStream = interval(config.progress.interval || 1000).pipe(
+  //     withLatestFrom(progressSubject),
+  //     map(([, progress]) => progress),
+  //     filter((progress) => progress.stage !== "complete")
+  //   );
+
+  //   return merge(progressSubject.asObservable(), intervalStream).pipe(share());
+  // }
+
+  /**
+   * Create metrics tracking stream with configurable intervals.
+   */
+  // createMetricsStream(
+  //   metricsSubject: Subject<MetricsReport>,
+  //   metricsState: any,
+  //   config: OperatorConfig
+  // ): Observable<MetricsReport> {
+  //   if (!config.metrics?.enabled) {
+  //     return metricsSubject.asObservable();
+  //   }
+
+  //   const intervalStream = interval(config.metrics.interval || 5000).pipe(
+  //     map(() => this.calculateMetrics(metricsState))
+  //   );
+
+  //   return merge(metricsSubject.asObservable(), intervalStream).pipe(share());
+  // }
 }

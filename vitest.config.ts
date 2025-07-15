@@ -1,19 +1,11 @@
+import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 const include = ["./src/**/*.test.ts", "./test/**/*.test.ts"];
 const exclude = ["node_modules/**", "**/node_modules/**"];
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      $util: "./src/lib/util",
-      $schemas: "./src/lib/schemas",
-      $api: "./src/lib/api",
-      $core: "./src/lib/core",
-      $clients: "./src/lib/clients",
-      $operators: "./src/lib/operators"
-    }
-  },
+  plugins: [tsconfigPaths()],
   test: {
     include,
     exclude,

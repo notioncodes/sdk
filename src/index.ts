@@ -1,1 +1,1 @@
-export type { NotionConfig } from "./lib/config";
+export * from "./lib/operators/search";

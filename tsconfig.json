@@ -1,28 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
     "baseUrl": ".",
-    "rootDir": ".",
-    "outDir": "./dist",
-    "module": "es2022",
-    "moduleResolution": "bundler",
-    "target": "es2022",
-    "verbatimModuleSyntax": true,
-    "sourceMap": true,
-    "strict": true,
-    "isolatedModules": true,
-    "noImplicitAny": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
     "paths": {
-      "$util/*": ["./src/lib/util/*"],
-      "$schemas/*": ["./src/lib/schemas/*"],
-      "$api/*": ["./src/lib/api/*"],
-      "$core/*": ["./src/lib/core/*"],
-      "$clients/*": ["./src/lib/clients/*"]
-    },
-    "types": ["vitest/globals"]
+      "$lib/*": ["./src/lib/*"]
+    }
   },
-  "include": ["./src", "./test"]
+  "include": ["src"],
+  "references": []
 }
